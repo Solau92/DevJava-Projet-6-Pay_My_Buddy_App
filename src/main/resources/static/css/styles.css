@@ -119,8 +119,8 @@ section#logPage{
 	border-radius:10px;
 	width:150px;
 	height:30px;
-	margin-bottom:0%;
-	margin-top:0%;
+	margin-bottom:2%;
+	margin-top:2%;
 }
 
 .greenButton {
@@ -131,6 +131,8 @@ section#logPage{
 	border:none;
 	width:150px;
 	height:30px;
+	margin-top:2%;
+	margin-bottom:2%;
 }
 
 .tableGreen{
@@ -179,8 +181,18 @@ a.pageEnCours {
 	color:#0076D9;
 }
 
-.alignementVertical{
-	
+.text-alert{
+    color:red;
+    font-size:small;
+}
+
+.ligne{
+    padding-top:3%;
+    padding-bottom:3%;
+}
+
+.formulaire{
+
 }
 
 

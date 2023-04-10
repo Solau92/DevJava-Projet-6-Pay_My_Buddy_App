@@ -1,56 +1,64 @@
 <!DOCTYPE html>
 <html lang="en"
-	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:th="http://www.thymeleaf.org"
 >
 
-	<head>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="styles.css">
-		<link th:href="@{/css/styles.css}" rel="stylesheet" />
-		<title>Home</title>
-	</head>
-	
-	<body>
-	
-		<nav>
-			<div id="navGauche">
-				<h1>Pay My Buddy</h1>
-			</div>
-			
-			<div id="navDroite">
-					<ul>					
-							<a href="#" class="pageEnCours">Home</a>			
-							<a href="/transfer">Transfer</a>
-							<a href="/profile">Profile</a>
-							<a href="/contact">Contact</a>
-							<a href="/logoff">Log off</a>
-					</ul>
-						    
-			</div>
-		</nav>
-		
-		<header>
-			<div id="header">
-				<a href="#" class="pageEnCours">Home /</a> 
-			</div>			
-		</header>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="styles.css">
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <title>Home</title>
+</head>
 
-		<main>
-		
-		<section>
-			Account balance : -- €
-		</section>
-		
-		<section>
-			<div><form>
-				<a><input class="blueButton" type="button" onclick=window.location.href="/profile" value="Edit profile"></input></a>
-				<a><input class="blueButton" type="button" onclick=window.location.href="/contact" value="New contact"></input></a>
-				<a><input class="blueButton" type="button" onclick=window.location.href="/transfer" value="New transfer"></input></a>
-			</form></div>
-		</section>
+<body>
 
-		</main>
-		
-	</body>
-	
+<nav>
+    <div id="navGauche">
+        <h1>Pay My Buddy</h1>
+    </div>
+
+    <div id="navDroite">
+        <ul>
+            <a href="#" class="pageEnCours">Home</a>
+            <a href="/user/transfer">Transfer</a>
+            <a href="/user/profile">Profile</a>
+            <a href="/user/contact">Contact</a>
+            <a href="/user/logoff">Log off</a>
+        </ul>
+
+    </div>
+</nav>
+
+<header>
+    <div id="header">
+        <a href="#" class="pageEnCours">Home /</a>
+    </div>
+</header>
+
+<main>
+
+    <section>
+        Account balance :
+            <p th:text="${accountBalance}"></p>
+        </table>
+
+    </section>
+
+    <section>
+        <div>
+            <form>
+                <a><input class="blueButton" type="button" onclick=window.location.href="/user/profile"
+                          value="Edit profile"></input></a>
+                <a><input class="blueButton" type="button" onclick=window.location.href="/user/contact"
+                          value="New contact"></input></a>
+                <a><input class="blueButton" type="button" onclick=window.location.href="/user/transfer"
+                          value="New transfer"></input></a>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+</body>
+
 </html>

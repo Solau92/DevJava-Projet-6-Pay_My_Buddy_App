@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<nav>
+    <div id="navGauche">
+        <h1>Pay My Buddy</h1>
+    </div>
+
+    <div id="navDroite">
+        <ul>
+            <a href="/user/home">Home</a>
+            <a href="/user/transfer">Transfer</a>
+            <a href="#" class="pageEnCours">Profile</a>
+            <a href="/user/contact">Contact</a>
+            <a href="/user/logoff">Log off</a>
+        </ul>
+    </div>
+</nav>
+
+<header>
+    <div id="header">
+        <a href="/user/home" class="pageEnCours">Home /</a> Profile
+    </div>
+</header>
+
+<main>
+
+    <section id="titre1">
+        <div>
+            <h2>My profile</h2>
+        </div>
+        <div>
+            <form>
+                <a><input class="blueButton" type="button" onclick=window.location.href="/user/profileEdition" value="Edit profile"></input></a>
+
+            </form>
+        </div>
+    </section>
+
+    <section id="profile">
+
+        <div class="ligne">
+            First name :  <span th:text="${firstname}"></span>
+        </div>
+
+        <div class="ligne">
+            Last name : <span th:text="${lastname}"></span>
+        </div>
+
+        <div class="ligne">
+            Email : <span th:text="${email}"></span>
+        </div>
+
+        <div class="ligne">
+            Password : ***
+        </div>
+
+    </section>
+
+
+</main>
+
+
+</body>
+</html>

@@ -29,6 +29,7 @@ public class UserServiceImplement implements UserService {
         user.setFirstname(userDto.getFirstname());
         user.setLastname(userDto.getLastname());
         user.setEmail(userDto.getEmail());
+        user.setAccountBalance(userDto.getAccountBalance());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
     }
@@ -51,6 +52,7 @@ public class UserServiceImplement implements UserService {
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
         userDto.setEmail(user.getEmail());
+        userDto.setAccountBalance(user.getAccountBalance());
         return userDto;
     }
 }

@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>Profile edition</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet"/>
 
 </head>
@@ -19,15 +19,18 @@
 
     <div id="navDroite">
         <ul>
-            <a href="#"></a>
+            <a href="/user/home">Home</a>
+            <a href="/user/transfer">Transfer</a>
+            <a href="/user/profile" class="pageEnCours">Profile</a>
+            <a href="/user/contact">Contact</a>
+            <a href="/user/logoff">Log off</a>
         </ul>
     </div>
-
 </nav>
 
 <header>
     <div id="header">
-        <a href="#" class="pageEnCours"> Registration</a>
+        <a href="user/home" class="pageEnCours">Home /</a>
     </div>
 </header>
 
@@ -35,60 +38,50 @@
 
     <section id="titre1">
         <div>
-            <h2>My informations</h2>
+            <h2>Edit profile</h2>
         </div>
     </section>
 
     <section id="profile">
 
-        <!--      <div th:if="${param.success}">
-                <div class="alert alert-info">
-                  You have successfully registered our app!
-                </div>
-              </div>-->
-
         <form
                 method="post"
                 role="form"
-                th:action="@{/register/save}"
-                th:object="${user}"
-        >
+                th:action="@{/update/save}"
+                th:object="${userupdated}"
+                >
+
             <div class="ligne">
                 <label class="formulaire">First Name</label>
                 <input
                         class="form-control"
                         id="firstname"
                         name="firstname"
-                        placeholder="Enter first name"
-                        th:field="*{firstname}"
+                        th:value="*{firstname}"
+                        th:field="${firstname}"
                         type="text"
                 />
-            </div>
+           </div>
 
-            <div class="ligne">
+ <!--           <div class="ligne">
                 <label class="formulaire">Last Name</label>
                 <input
                         class="form-control"
                         id="lastname"
                         name="lastname"
-                        placeholder="Enter last name"
-                        th:field="*{lastname}"
-                        type="text"
+                        th:value="${lastname}"
                 />
-            </div>
+            </div>-->
 
-            <div class="ligne">
+<!--            <div class="ligne">
                 <label class="formulaire">Email</label>
                 <input
                         class="form-control"
                         id="email"
                         name="email"
-                        placeholder="Enter email address"
+                        th:value="${email}"
                         th:field="*{email}"
-                        type="email"
                 />
-                <p th:errors="*{email}" class="text-alert"
-                   th:if="${#fields.hasErrors('email')}"></p>
             </div>
 
             <div class="ligne">
@@ -97,16 +90,12 @@
                         class="form-control"
                         id="password"
                         name="password"
-                        placeholder="Enter password"
-                        th:field="*{password}"
-                        type="password"
+                        th:value="${password}"
                 />
-                <p th:errors="*{password}" class="text-alert"
-                   th:if="${#fields.hasErrors('password')}"></p>
-            </div>
+            </div>-->
 
             <div>
-                <button class="greenButton" type="submit">Register</button>
+                <button class="greenButton" type="submit">Save</button>
             </div>
         </form>
 

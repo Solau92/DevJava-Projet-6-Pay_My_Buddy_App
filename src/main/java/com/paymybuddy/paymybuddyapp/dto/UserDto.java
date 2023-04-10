@@ -1,17 +1,20 @@
 package com.paymybuddy.paymybuddyapp.dto;
 
 
+import org.springframework.lang.NonNull;
+
 public class UserDto {
 
     public UserDto() {
     }
 
-    public UserDto(Integer id, String email, String password, String firstname, String lastname) {
+    public UserDto(Integer id, String email, String password, String firstname, String lastname, double accountBalance) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.accountBalance = accountBalance;
     }
 
     private Integer id;
@@ -22,11 +25,13 @@ public class UserDto {
     //    @NotEmpty
     private String password;
 
-    //    @NotEmpty
+//    @NotEmpty
     private String firstname;
 
     //    @NotEmpty
     private String lastname;
+
+    private double accountBalance;
 
     public Integer getId() {return id;
     }
@@ -67,4 +72,11 @@ public class UserDto {
         this.lastname = lastname;
     }
 
+    public double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
 }

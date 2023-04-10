@@ -34,7 +34,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
@@ -43,7 +43,7 @@ public class User {
     @Column
     private String lastname;
 
-    @Column
+    @Column(name="accountBalance")
     private double accountBalance;
 
     @OneToMany(

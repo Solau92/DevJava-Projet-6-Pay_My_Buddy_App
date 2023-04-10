@@ -32,17 +32,17 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.
-                                requestMatchers("/css/**").permitAll()
+                        authorize
+                                .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/index").permitAll()
-                                .requestMatchers("/home").authenticated()
+                                .requestMatchers("/user/**").authenticated()
 //                                .requestMatchers("/users").permitAll()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
 //                                .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/home")
+                                .defaultSuccessUrl("/user/home")
                                 .permitAll()
                 ).logout(
                         logout -> logout
