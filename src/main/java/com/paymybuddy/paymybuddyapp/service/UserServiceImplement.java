@@ -55,4 +55,8 @@ public class UserServiceImplement implements UserService {
         userDto.setAccountBalance(user.getAccountBalance());
         return userDto;
     }
+
+    public void addContact(){
+        //TODO
+    }
 }

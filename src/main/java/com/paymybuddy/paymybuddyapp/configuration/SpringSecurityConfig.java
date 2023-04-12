@@ -35,6 +35,7 @@ public class SpringSecurityConfig {
                         authorize
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/logoff").permitAll()
                                 .requestMatchers("/index").permitAll()
                                 .requestMatchers("/user/**").authenticated()
 //                                .requestMatchers("/users").permitAll()

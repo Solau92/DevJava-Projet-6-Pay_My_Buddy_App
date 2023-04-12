@@ -1,7 +1,9 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
+import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +21,13 @@ public class AuthenticationController {
 
 	private UserService userService;
 
+	private TransferService transferService;
+
 	private String LoggedUserEmail;
 
-	public AuthenticationController(UserService userService) {
+	public AuthenticationController(UserService userService, TransferService transferService) {
 		this.userService = userService;
+		this.transferService = transferService;
 	}
 
 	@GetMapping("/index")
@@ -59,7 +64,6 @@ public class AuthenticationController {
 			return "register";
 		}
 
-		System.out.println(userDto.getFirstname());
 		userService.saveUser(userDto);
 		return "redirect:/login";
 	}
@@ -128,7 +132,6 @@ public class AuthenticationController {
 			return "register";
 		}*/
 
-		System.out.println(userDto.getFirstname());
 		userService.saveUser(userDto);
 		return "redirect:/profile";
 	}
@@ -144,6 +147,67 @@ public class AuthenticationController {
 		}
 
 		this.LoggedUserEmail = username;
+	}
 
+	@GetMapping("/user/transfer")
+	public String transfer(Model model) {
+		TransferDto transfer = new TransferDto();
+		model.addAttribute("transfer", transfer);
+		return "transfer";
+	}
+
+	@PostMapping("/user/transfer/pay")
+	public String addTransfer(@ModelAttribute("transfer") TransferDto transferDto,
+	                           BindingResult result,
+	                           Model model) {
+
+		transferService.saveTransfer(transferDto);
+		return "redirect:/transfer";
+	}
+
+
+/*	@GetMapping("/register")
+	public String showRegistrationForm(Model model) {
+		UserDto user = new UserDto();
+		model.addAttribute("user", user);
+		return "register";
+	}*/
+
+	@GetMapping("/user/contact")
+	public String contact(Model model) {
+		String friendEmail = "";
+		model.addAttribute("friendemail", friendEmail);
+		return "contact";
+	}
+
+	@PostMapping("/user/contact")
+	public String addContact(@ModelAttribute("user") UserDto userDto,
+	                           BindingResult result,
+	                           Model model) {
+//TODO !!
+	/*	User existingUser = userService.findUserByEmail(userDto.getEmail());
+
+		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+			result.rejectValue("email", null,
+					"There is already an account registered with the same email");
+		}
+
+		if (userDto.getEmail().equals("")) {
+			result.rejectValue("email", null, "Email field cannot be empty");
+		}
+
+		if (result.hasErrors()) {
+			model.addAttribute("user", userDto);
+			return "contact";
+		}*/
+
+		userService.saveUser(userDto);
+		return "contact";
+	}
+
+
+	@GetMapping("/logoff")
+	public String logoff() {
+		return "logoff";
 	}
 }

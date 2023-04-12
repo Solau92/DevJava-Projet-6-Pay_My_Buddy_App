@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="styles.css">
+		<link th:href="@{/css/styles.css}" rel="stylesheet" />
+		<title>Transfer</title>
+	</head>
+	
+	<body>
+
+		<nav>
+			<div id="navGauche">
+				<h1>Pay My Buddy</h1>
+			</div>
+			
+			<div id="navDroite">
+					<ul>					
+							<a href="/user/home">Home</a>
+							<a href="#" class="pageEnCours">Transfer</a>		
+							<a href="/user/profile">Profile</a>
+							<a href="/user/contact">Contact</a>
+							<a href="/logoff">Log off</a>
+					</ul>
+						    
+			</div>
+		</nav>
+		
+		<header>
+			<div id="header">
+				<a href="#" class="pageEnCours">Home /</a> Transfer
+			</div>
+			
+		</header>
+		
+		<main>
+			<section id="titre1">	
+				<div>
+					<h2>Send Money</h2>
+				</div>			
+				<div>
+					<a><input class="blueButton" type="button" onclick=window.location.href="/user/contact" value="Add Connection"></input></a>
+				</div>	
+			</section>
+			
+			<section id="newTransfer">
+
+				<form
+						method="post"
+						role="form"
+						th:action="@{/user/transfer/pay}"
+						th:object="${transfer}"
+				>
+
+					<div class="ligne">
+						<label class="formulaire">Amount</label>
+						<input
+								class="form-control"
+								id="amount"
+								name="amount"
+								placeholder="Enter amount"
+								th:field="*{amount}"
+								type="text"
+						/>
+					</div>
+
+					<div class="ligne">
+						<label class="formulaire">Creditor</label>
+						<input
+								class="form-control"
+								id="creditor"
+								name="creditor"
+								placeholder="creditor id"
+								th:field="*{creditor}"
+								type="text"
+						/>
+					</div>
+
+					<div class="ligne">
+						<label class="formulaire">Debtor</label>
+						<input
+								class="form-control"
+								id="debtor"
+								name="debtor"
+								placeholder="debtor id"
+								th:field="*{debtor}"
+								type="text"
+						/>
+					</div>
+
+					
+<!--					<div><form>
+						<select> 
+							<option value=""> Select A Connection </option>
+						</select>
+					</form></div>
+					
+					<div><form>
+						<input type="number" min="0" placeholder="0.0€"></input>
+					</form></div>-->
+					
+					<div>
+						<button class="greenButton" type="submit">Pay</button>
+					</div>
+
+				</form>
+			</section>
+
+			</br>
+			
+			<section id="titre2">
+				<h2>My Transactions</h2>
+			</section>
+			
+			<section id="tableau">
+				<table border ="1">
+					<tr>
+						<td class="tableGreen">Connections</td>
+						<td class="tableGreen">Description</td>
+						<td class="tableGreen">Amount</td>
+					</tr>
+					<tr>
+						<td class="tableGrey">.</td>
+						<td class="tableGrey">.</td>
+						<td class="tableGrey">.</td>
+					</tr>
+					<tr>
+						<td class="tableRegular">.</td>
+						<td class="tableRegular">.</td>
+						<td class="tableRegular">.</td>
+					</tr>
+				</table>
+			</section>
+		</main>
+	</body>
+</html>
