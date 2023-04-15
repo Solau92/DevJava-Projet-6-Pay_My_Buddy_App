@@ -135,16 +135,27 @@ section#logPage{
 	margin-bottom:2%;
 }
 
-.tableGreen{
-	background-color:#5CB95C; 
+thead{
+	background-color:#5CB95C;
 	color:#FFFFFF;
 	text-align:center;
 }
 
-.tableGrey{
-	background-color:#DCDCDC; 
+tbody tr:nth-child(odd){
+    background-color:#DCDCDC;
 	text-align:center;
 }
+
+/*.tableGreen{
+	background-color:#5CB95C; 
+	color:#FFFFFF;
+	text-align:center;
+}*/
+
+/*.tableGrey{
+	background-color:#DCDCDC; 
+	text-align:center;
+}*/
 
 .tableRegular{
 	text-align:center;

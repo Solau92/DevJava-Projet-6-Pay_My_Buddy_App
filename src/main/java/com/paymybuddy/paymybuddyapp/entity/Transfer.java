@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="transfer")
-@DynamicUpdate
+//@DynamicUpdate
 public class Transfer {
 
     public Transfer() {

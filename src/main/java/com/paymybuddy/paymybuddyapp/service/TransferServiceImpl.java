@@ -13,8 +13,11 @@ public class TransferServiceImpl implements TransferService {
 
 	private TransferRepository transferRepository;
 
-	public TransferServiceImpl(TransferRepository transferRepository){
+	private UserServiceImplement userServiceImplement;
+
+	public TransferServiceImpl(TransferRepository transferRepository, UserServiceImplement userServiceImplement){
 		this.transferRepository = transferRepository;
+		this.userServiceImplement = userServiceImplement;
 	}
 
 	@Override
@@ -26,14 +29,12 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setCreditor(transferDto.getCreditor());
 		transfer.setDate(transferDto.getDate());
 		transfer.setReason(transferDto.getReason());
-
-		System.out.println("save transfer ! ");
-
+		System.out.println(transfer.getAmount() + " - " + transfer.getDebtor() + " - " + transfer.getCreditor());
 		transferRepository.save(transfer);
 	}
 
 	@Override
-	public List<TransferDto> findAllTransfers() {
+	public List<TransferDto> findAllUsersTransfers(String email) {
 		List<Transfer> transfers = transferRepository.findAll();
 		return transfers.stream()
 				.map((transfer) -> mapToTransferDto(transfer))

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<
+
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
 >
@@ -10,53 +10,54 @@
 </head>
 
 <body>
+<main>
+    <section id="logPage">
 
-<section id="logPage">
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Invalid Email or Password</div>
+        </div>
+        <div th:if="${param.logout}">
+            <div class="alert alert-success"> You have been logged out.</div>
+        </div>
 
-    <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid Email or Password</div>
-    </div>
-    <div th:if="${param.logout}">
-        <div class="alert alert-success"> You have been logged out.</div>
-    </div>
+        <div>
+            <h1>Pay My Buddy</h1>
+        </div>
 
-    <div>
-        <h1>Pay My Buddy</h1>
-    </div>
+        <form
+                method="post"
+                role="form"
+                th:action="@{/login}"
+                class="form-horizontal"
+        >
+            <div class="ligne">
+                <label class="formulaire"> Email</label>
+                <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        placeholder="Enter email address"
+                />
+            </div>
 
-            <form
-                    method="post"
-                    role="form"
-                    th:action="@{/login}"
-                    class="form-horizontal"
-            >
-                <div class="ligne">
-                    <label class="formulaire"> Email</label>
-                    <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            class="form-control"
-                            placeholder="Enter email address"
-                    />
-                </div>
-
-                <div class="ligne">
-                    <label class="formulaire"> Password</label>
-                    <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="form-control"
-                            placeholder="Enter password"
-                    />
-                </div>
-                <div>
-                    <button type="submit" class="blueButton">Submit</button>
-                </div>
-            </form>
+            <div class="ligne">
+                <label class="formulaire"> Password</label>
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Enter password"
+                />
+            </div>
+            <div>
+                <button type="submit" class="blueButton">Submit</button>
+            </div>
+        </form>
 
 
-</section>
+    </section>
+</main>
 </body>
 </html>

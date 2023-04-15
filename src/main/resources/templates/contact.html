@@ -46,54 +46,51 @@
 
         <form
                 method="post"
-                role="form">
-<!--                th:action="@{/contact/save}"-->
-<!--                th:object="${contact}"-->
-<!--        >-->
+                role="form"
+                th:action="@{/user/contact/save}"
+                th:object="${email}"
+        >
 
             <div class="ligne">
                 <label class="formulaire">Email</label>
                 <input
                         class="form-control"
-                        id="firstname"
-                        name="firstname"
+                        id="email"
+                        name="email"
                         placeholder="Enter friend email"
                         type="text"
                 />
+
             </div>
 
-            <!--                        TODO-->
-
             <div>
-                <button class="greenButton">Add</button>
+                <button class="greenButton" type="submit">Add</button>
             </div>
         </form>
 
     </section>
-
-    </br>
 
     <section id="titre2">
         <h2>My contacts</h2>
     </section>
 
     <section id="tableau">
-        <table border="1">
-            <tr>
-                <td class="tableGreen">First name</td>
-                <td class="tableGreen">Last Name</td>
-                <td class="tableGreen">Email</td>
+        <table border="1" class="tableau">
+            <head>
+                <tr>
+                    <td>First name</td>
+                    <td>Last Name</td>
+                    <td>Email</td>
+                </tr>
+            </head>
+           <body>
+            <tr th:each="user: ${contacts}">
+                <td th:text="${user.firstname}"/>
+                <td th:text="${user.lastname}"/>
+                <td th:text="${user.email}"/>
             </tr>
-            <tr>
-                <td class="tableGrey">.</td>
-                <td class="tableGrey">.</td>
-                <td class="tableGrey">.</td>
-            </tr>
-            <tr>
-                <td class="tableRegular">.</td>
-                <td class="tableRegular">.</td>
-                <td class="tableRegular">.</td>
-            </tr>
+
+           </body>
         </table>
     </section>
 </main>

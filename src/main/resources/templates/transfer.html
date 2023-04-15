@@ -54,15 +54,22 @@
 						th:object="${transfer}"
 				>
 
+<!--					<div>-->
+<!--						<select th:field="*{creditor}">-->
+<!--							<option value="">Select A Connection</option>-->
+<!--						</select>-->
+
+<!--					</div>-->
 					<div class="ligne">
 						<label class="formulaire">Amount</label>
 						<input
 								class="form-control"
 								id="amount"
 								name="amount"
-								placeholder="Enter amount"
+								placeholder="0.0 €"
 								th:field="*{amount}"
-								type="text"
+								type="number"
+								min="0"
 						/>
 					</div>
 
@@ -78,17 +85,17 @@
 						/>
 					</div>
 
-					<div class="ligne">
-						<label class="formulaire">Debtor</label>
-						<input
-								class="form-control"
-								id="debtor"
-								name="debtor"
-								placeholder="debtor id"
-								th:field="*{debtor}"
-								type="text"
-						/>
-					</div>
+<!--					<div class="ligne">-->
+<!--						<label class="formulaire">Debtor</label>-->
+<!--						<input-->
+<!--								class="form-control"-->
+<!--								id="debtor"-->
+<!--								name="debtor"-->
+<!--								placeholder="debtor id"-->
+<!--								th:field="*{debtor}"-->
+<!--								type="text"-->
+<!--						/>-->
+<!--					</div>-->
 
 					
 <!--					<div><form>

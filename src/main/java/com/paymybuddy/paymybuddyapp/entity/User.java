@@ -51,7 +51,7 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id") // ????????
     List<Transfer> transfers_received = new ArrayList<>();
 
     @OneToMany(
@@ -142,5 +142,12 @@ public class User {
 
     public void setContacts(List<User> contacts) {
         this.contacts = contacts;
+    }
+
+    public void printContact(){
+        for (User u : this.getContacts()
+             ) {
+            System.out.print(u.getEmail());
+        }
     }
 }

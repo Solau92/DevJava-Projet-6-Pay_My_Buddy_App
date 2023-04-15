@@ -45,9 +45,9 @@
     <section id="profile">
 
         <form
-                method="post"
+                method="put"
                 role="form"
-                th:action="@{/update/save}"
+                th:action="@{/user/update/save}"
                 th:object="${userupdated}"
                 >
 
@@ -60,7 +60,7 @@
                         th:value="${firstname}"/>
            </div>
 
- <!--           <div class="ligne">
+            <div class="ligne">
                 <label class="formulaire">Last Name</label>
                 <input
                         class="form-control"
@@ -68,17 +68,17 @@
                         name="lastname"
                         th:value="${lastname}"
                 />
-            </div>-->
+            </div>
 
-<!--            <div class="ligne">
+            <div class="ligne">
                 <label class="formulaire">Email</label>
                 <input
                         class="form-control"
                         id="email"
                         name="email"
-                        th:value="${email}"
-                        th:field="*{email}"
-                />
+                        th:value="${email}"/>
+<!--                        th:field="*{email}"-->
+<!--                />-->
             </div>
 
             <div class="ligne">
@@ -89,7 +89,7 @@
                         name="password"
                         th:value="${password}"
                 />
-            </div>-->
+            </div>
 
             <div>
                 <button class="greenButton" type="submit">Save</button>

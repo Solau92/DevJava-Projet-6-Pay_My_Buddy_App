@@ -8,6 +8,6 @@ public interface TransferService {
 
 	void saveTransfer(TransferDto transferDto);
 
-	List<TransferDto> findAllTransfers();
+	List<TransferDto> findAllUsersTransfers(String email);
 
 }

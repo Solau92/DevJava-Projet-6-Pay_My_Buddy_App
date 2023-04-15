@@ -41,7 +41,7 @@
 
     <section id="profile">
 
-        <!--      <div th:if="${param.success}">
+<!--              <div th:if="${param.success}">
                 <div class="alert alert-info">
                   You have successfully registered our app!
                 </div>
@@ -63,6 +63,8 @@
                         th:field="*{firstname}"
                         type="text"
                 />
+                <p th:errors="*{firstname}" class="text-alert"
+                   th:if="${#fields.hasErrors('firstname')}"></p>
             </div>
 
             <div class="ligne">
@@ -75,6 +77,8 @@
                         th:field="*{lastname}"
                         type="text"
                 />
+                <p th:errors="*{lastname}" class="text-alert"
+                   th:if="${#fields.hasErrors('lastname')}"></p>
             </div>
 
             <div class="ligne">

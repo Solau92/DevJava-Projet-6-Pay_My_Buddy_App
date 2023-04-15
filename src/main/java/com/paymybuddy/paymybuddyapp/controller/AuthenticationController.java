@@ -5,6 +5,7 @@ import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -43,8 +44,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/register/save")
-	//    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
-	public String registration(@ModelAttribute("user") UserDto userDto,
+	public String registration(@ModelAttribute("user") @Valid UserDto userDto,
 	                           BindingResult result,
 	                           Model model) {
 
@@ -52,12 +52,15 @@ public class AuthenticationController {
 
 		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
 			result.rejectValue("email", null,
-					"There is already an account registered with the same email");
+					"There is already an account registered with this email");
 		}
 
-		if (userDto.getEmail().equals("")) {
-			result.rejectValue("email", null, "Email field cannot be empty");
-		}
+//		if (userDto.getEmail().equals("")) {
+//			result.rejectValue("email", null, "Email field cannot be empty");
+//		}
+//		if(userDto.getPassword().equals("")) {
+//			result.rejectValue("password", null, "Password field cannot be empty");
+//		}
 
 		if (result.hasErrors()) {
 			model.addAttribute("user", userDto);
@@ -73,13 +76,17 @@ public class AuthenticationController {
 		return "login";
 	}
 
-	@GetMapping("/user/home")
+/*	@GetMapping("/user/home")
 	public String home(Model model) {
 		getEmail();
-		System.out.println("dans /home : " + this.LoggedUserEmail);
 		User user = userService.findUserByEmail(this.LoggedUserEmail);
 		model.addAttribute("accountBalance", (Double.toString(user.getAccountBalance()) + " €"));
 		return "home";
+	}*/
+
+	@GetMapping("/logoff")
+	public String logoff() {
+		return "logoff";
 	}
 
 	@GetMapping("/users")
@@ -89,9 +96,24 @@ public class AuthenticationController {
 		return "users";
 	}
 
+	private void getEmail() {
 
-	@GetMapping("/user/profile")
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String username;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+
+		this.LoggedUserEmail = username;
+	}
+
+
+/*	@GetMapping("/user/profile")
 	public String profile(Model model) {
+		getEmail();
 		User user = userService.findUserByEmail(this.LoggedUserEmail);
 		model.addAttribute("firstname", user.getFirstname());
 		model.addAttribute("lastname", user.getLastname());
@@ -109,16 +131,17 @@ public class AuthenticationController {
 		User userupdated = userService.findUserByEmail(this.LoggedUserEmail);
 		model.addAttribute("userupdated", userupdated);
 		return "profileEdition";
-	}
+	}*/
 
-	@PostMapping("/update/save")
+/*	@PostMapping("/update/save")
 	public String update(@ModelAttribute("userupdated") UserDto userDto,
 	                     BindingResult result,
 	                     Model model) {
 
+		//est-ce que l'utilisateru connecté est bien le user à mettre à jour
 		User existingUser = userService.findUserByEmail(userDto.getEmail());
 
-/*		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+*//*		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
 			result.rejectValue("email", null,
 					"There is already an account registered with the same email");
 		}
@@ -130,14 +153,16 @@ public class AuthenticationController {
 		if (result.hasErrors()) {
 			model.addAttribute("userupdated", userDto);
 			return "register";
-		}*/
+		}*//*
 
 		userService.saveUser(userDto);
 		return "redirect:/profile";
-	}
+	}*/
 
+/*
+*
 	private void getEmail() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User usserlogged = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
 		String username;
 		if (principal instanceof UserDetails) {
@@ -149,7 +174,23 @@ public class AuthenticationController {
 		this.LoggedUserEmail = username;
 	}
 
-	@GetMapping("/user/transfer")
+	private void getEmail() {
+//		User userLogged = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String username;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails)principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+
+		this.LoggedUserEmail = username;
+	}*/
+
+
+/*	@GetMapping("/user/transfer")
 	public String transfer(Model model) {
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
@@ -160,10 +201,12 @@ public class AuthenticationController {
 	public String addTransfer(@ModelAttribute("transfer") TransferDto transferDto,
 	                           BindingResult result,
 	                           Model model) {
-
+		Integer idLoggedUser = userService.findUserByEmail(this.LoggedUserEmail).getId();
+//		Integer idLoggedUser = this.LoggedUserEmail;
+		transferDto.setDebtor(idLoggedUser);
 		transferService.saveTransfer(transferDto);
 		return "redirect:/transfer";
-	}
+	}*/
 
 
 /*	@GetMapping("/register")
@@ -173,7 +216,7 @@ public class AuthenticationController {
 		return "register";
 	}*/
 
-	@GetMapping("/user/contact")
+/*	@GetMapping("/user/contact")
 	public String contact(Model model) {
 		String friendEmail = "";
 		model.addAttribute("friendemail", friendEmail);
@@ -185,7 +228,7 @@ public class AuthenticationController {
 	                           BindingResult result,
 	                           Model model) {
 //TODO !!
-	/*	User existingUser = userService.findUserByEmail(userDto.getEmail());
+	*//*	User existingUser = userService.findUserByEmail(userDto.getEmail());
 
 		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
 			result.rejectValue("email", null,
@@ -199,15 +242,12 @@ public class AuthenticationController {
 		if (result.hasErrors()) {
 			model.addAttribute("user", userDto);
 			return "contact";
-		}*/
+		}*//*
 
 		userService.saveUser(userDto);
 		return "contact";
-	}
+	}*/
 
 
-	@GetMapping("/logoff")
-	public String logoff() {
-		return "logoff";
-	}
+
 }

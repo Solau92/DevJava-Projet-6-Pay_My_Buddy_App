@@ -9,9 +9,11 @@ public interface UserService {
 
     void saveUser(UserDto userDto);
 
+    void updateUser(UserDto userDto);
+
     User findUserByEmail(String email);
 
     List<UserDto> findAllUsers();
 
-
+    void addContact(User friend);
 }
