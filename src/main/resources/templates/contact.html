@@ -78,9 +78,9 @@
         <table border="1" class="tableau">
             <head>
                 <tr>
-                    <td>First name</td>
-                    <td>Last Name</td>
-                    <td>Email</td>
+                    <th>First name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
                 </tr>
             </head>
            <body>
@@ -89,6 +89,33 @@
                 <td th:text="${user.lastname}"/>
                 <td th:text="${user.email}"/>
             </tr>
+
+<!--            <div id="pages" aria-label="pagination">
+                <ul class="pagination">
+                    <li><a href=""><span aria-hidden="true">«</span><span class="visuallyhidden">previous set of pages</span></a></li>
+                    <li><a href=""><span class="visuallyhidden">page </span>1</a></li>
+                    <li><a href="" aria-current="page"><span class="visuallyhidden">page </span>2</a></li>
+                    <li><a href=""><span class="visuallyhidden">page </span>3</a></li>
+                    <li><a href=""><span class="visuallyhidden">page </span>4</a></li>
+                    <li><a href=""><span class="visuallyhidden">next set of pages</span><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </div>-->
+
+<!--            <div id="pages" aria-label="pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </div>-->
 
            </body>
         </table>

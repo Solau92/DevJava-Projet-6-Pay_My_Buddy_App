@@ -51,7 +51,7 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    @JoinColumn(name = "id") // ????????
+    @JoinColumn(name = "id")
     List<Transfer> transfers_received = new ArrayList<>();
 
     @OneToMany(

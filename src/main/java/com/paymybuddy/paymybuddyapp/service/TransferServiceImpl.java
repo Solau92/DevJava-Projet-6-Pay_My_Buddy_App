@@ -5,6 +5,7 @@ import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setCreditor(transferDto.getCreditor());
 		transfer.setDate(transferDto.getDate());
 		transfer.setReason(transferDto.getReason());
-		System.out.println(transfer.getAmount() + " - " + transfer.getDebtor() + " - " + transfer.getCreditor());
+		transfer.setDate(LocalDate.now());
 		transferRepository.save(transfer);
 	}
 

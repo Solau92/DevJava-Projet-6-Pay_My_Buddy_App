@@ -135,15 +135,31 @@ section#logPage{
 	margin-bottom:2%;
 }
 
-thead{
+th{
 	background-color:#5CB95C;
 	color:#FFFFFF;
 	text-align:center;
 }
 
-tbody tr:nth-child(odd){
+tbody tr:nth-child(even){
     background-color:#DCDCDC;
 	text-align:center;
+}
+
+pages {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.pagination li {
+    margin: 0 1px;
 }
 
 /*.tableGreen{

@@ -1,6 +1,7 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
+import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
@@ -11,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 public class TransferController {
@@ -28,6 +31,8 @@ public class TransferController {
 	public String transfer(Model model) {
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
+		List<Transfer> transfers = getLoggedUser().getTransfers_done();
+		model.addAttribute("transfers", transfers);
 		return "transfer";
 	}
 
@@ -39,7 +44,7 @@ public class TransferController {
 		Integer idLoggedUser = loggedUser.getId();
 		transferDto.setDebtor(idLoggedUser);
 		transferService.saveTransfer(transferDto);
-		return "redirect:/transfer";
+		return "redirect:/user/transfer";
 	}
 
 	private User getLoggedUser() {

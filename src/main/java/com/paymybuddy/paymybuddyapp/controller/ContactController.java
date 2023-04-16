@@ -57,7 +57,7 @@ public class ContactController {
 			return "contact";
 		}*/
 
-		return "contact";
+		return "redirect:/user/contact";
 	}
 
 	private User getLoggedUser() {
