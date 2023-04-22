@@ -36,14 +36,12 @@ public class ProfileController {
 
 		// Permet de transmettre les infos à la vue
 		User user = getLoggedUser();
-		System.out.println("loggedUser1" + user.toString());
 		model.addAttribute("firstname", user.getFirstname());
 		model.addAttribute("lastname", user.getLastname());
 		model.addAttribute("email", user.getEmail());
 		model.addAttribute("password", user.getPassword());
 
 		// Permet de récupérer des infos de la vue
-		System.out.println("loggedUser2" + user.toString());
 		User updatedUser = getLoggedUser();
 		model.addAttribute("userupdated", updatedUser);
 

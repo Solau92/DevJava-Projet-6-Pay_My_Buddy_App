@@ -22,7 +22,7 @@
             <a href="#" class="pageEnCours">Transfer</a>
             <a href="/user/profile">Profile</a>
             <a href="/user/contact">Contact</a>
-            <a href="/logoff">Log off</a>
+            <a href="/logout">Log off</a>
         </ul>
 
     </div>
@@ -55,12 +55,16 @@
                 th:object="${transfer}"
         >
 
-            <!--					<div>-->
-            <!--						<select th:field="*{creditor}">-->
-            <!--							<option value="">Select A Connection</option>-->
-            <!--						</select>-->
+            <div>
+                <select th:field="*{creditor}">
+                    <option value="">Select A Connection</option>
+                    <option th:each="user : ${connections}"
+                    th:value="${user.email}"
+                    th:text="${user.email}"
+                    >
+                </select>
+            </div>
 
-            <!--					</div>-->
             <div class="ligne">
                 <label class="formulaire">Amount</label>
                 <input
@@ -74,7 +78,7 @@
                 />
             </div>
 
-            <div class="ligne">
+<!--            <div class="ligne">
                 <label class="formulaire">Creditor</label>
                 <input
                         class="form-control"
@@ -84,7 +88,7 @@
                         th:field="*{creditor}"
                         type="text"
                 />
-            </div>
+            </div>-->
 
             <div class="ligne">
                 <label class="formulaire">Reason</label>

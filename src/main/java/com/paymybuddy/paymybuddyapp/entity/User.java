@@ -12,142 +12,144 @@ import java.util.List;
 @DynamicUpdate
 public class User {
 
-    public User() {
-    }
+	@OneToMany(
+			cascade = CascadeType.ALL,
+			orphanRemoval = true,
+			fetch = FetchType.EAGER
+	)
+	@JoinColumn(name = "id")
+	List<Transfer> transfers_received = new ArrayList<>();
+	@OneToMany(
+			cascade = CascadeType.ALL,
+			orphanRemoval = true,
+			fetch = FetchType.EAGER
+	)
+	@JoinColumn(name = "id")
+	List<Transfer> transfers_done = new ArrayList<>();
+	@ManyToMany(
+			fetch = FetchType.LAZY
+	)
+	@JoinTable(
+			name = "contact",
+			joinColumns = @JoinColumn(name = "user"),
+			inverseJoinColumns = @JoinColumn(name = "friend")
+			// unique = true
+	)
+	List<User> contacts = new ArrayList<>(); // Set
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	@Column(nullable = false, unique = true)
+	private String email;
+	@Column(nullable = false)
+	private String password;
+	@Column
+	private String firstname;
+	@Column
+	private String lastname;
+	@Column(name = "accountBalance")
+	private double accountBalance;
 
-    public User(Integer id, String email, String password, String firstname, String lastname, double accountBalance, List<Transfer> transfers_received, List<Transfer> transfers_done, List<User> contacts) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.accountBalance = accountBalance;
-        this.transfers_received = transfers_received;
-        this.transfers_done = transfers_done;
-        this.contacts = contacts;
-    }
+	public User() {
+	}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	public User(Integer id, String email, String password, String firstname, String lastname, double accountBalance, List<Transfer> transfers_received, List<Transfer> transfers_done, List<User> contacts) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.accountBalance = accountBalance;
+		this.transfers_received = transfers_received;
+		this.transfers_done = transfers_done;
+		this.contacts = contacts;
+	}
 
-    @Column(nullable = false, unique = true)
-    private String email;
+	public Integer getId() {
+		return id;
+	}
 
-    @Column(nullable = false)
-    private String password;
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    @Column
-    private String firstname;
+	public String getEmail() {
+		return email;
+	}
 
-    @Column
-    private String lastname;
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    @Column(name="accountBalance")
-    private double accountBalance;
+	public String getPassword() {
+		return password;
+	}
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(name = "id")
-    List<Transfer> transfers_received = new ArrayList<>();
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(name = "id")
-    List<Transfer> transfers_done = new ArrayList<>();
+	public String getFirstname() {
+		return firstname;
+	}
 
-    @ManyToMany(
-            fetch = FetchType.LAZY
-    )
-    @JoinTable(
-            name = "contact",
-            joinColumns = @JoinColumn(name = "user"),
-            inverseJoinColumns = @JoinColumn(name = "friend")
-    )
-    List<User> contacts = new ArrayList<>();
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public String getLastname() {
+		return lastname;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public double getAccountBalance() {
+		return accountBalance;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setAccountBalance(double accountBalance) {
+		this.accountBalance = accountBalance;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public List<Transfer> getTransfers_received() {
+		return transfers_received;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setTransfers_received(List<Transfer> transfers_received) {
+		this.transfers_received = transfers_received;
+	}
 
-    public String getFirstname() {
-        return firstname;
-    }
+	public List<Transfer> getTransfers_done() {
+		return transfers_done;
+	}
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+	public void setTransfers_done(List<Transfer> transfers_done) {
+		this.transfers_done = transfers_done;
+	}
 
-    public String getLastname() {
-        return lastname;
-    }
+	public List<User> getContacts() {
+		return contacts;
+	}
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+	public void setContacts(List<User> contacts) {
+		this.contacts = contacts;
+	}
 
-    public double getAccountBalance() {
-        return accountBalance;
-    }
+	public void printContact() {
+		for (User u : this.getContacts()
+		) {
+			System.out.print(u.getEmail());
+		}
+	}
 
-    public void setAccountBalance(double accountBalance) {
-        this.accountBalance = accountBalance;
-    }
+	public void printTransfersDone() {
+		int compteur = 0;
+		for (Transfer t : this.getTransfers_done()) {
+			System.out.print(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
+			compteur++;
+		}
+	}
 
-    public List<Transfer> getTransfers_received() {
-        return transfers_received;
-    }
-
-    public void setTransfers_received(List<Transfer> transfers_received) {
-        this.transfers_received = transfers_received;
-    }
-
-    public List<Transfer> getTransfers_done() {
-        return transfers_done;
-    }
-
-    public void setTransfers_done(List<Transfer> transfers_done) {
-        this.transfers_done = transfers_done;
-    }
-
-    public List<User> getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(List<User> contacts) {
-        this.contacts = contacts;
-    }
-
-    public void printContact(){
-        for (User u : this.getContacts()
-             ) {
-            System.out.print(u.getEmail());
-        }
-    }
 }

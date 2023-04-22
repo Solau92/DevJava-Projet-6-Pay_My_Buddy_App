@@ -29,11 +29,21 @@ public class TransferController {
 
 	@GetMapping("/user/transfer")
 	public String transfer(Model model) {
+
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
+
 		List<Transfer> transfers = getLoggedUser().getTransfers_done();
+		System.out.print("liste transferts : ");
+		getLoggedUser().printTransfersDone();
+		// Plutôt chercher avec findAllTranserts
+
 		model.addAttribute("transfers", transfers);
-		return "transfer";
+
+		List<User> connections = getLoggedUser().getContacts();
+		model.addAttribute("connections", connections);
+
+	return "transfer";
 	}
 
 	@PostMapping("/user/transfer/pay")
@@ -44,6 +54,8 @@ public class TransferController {
 		Integer idLoggedUser = loggedUser.getId();
 		transferDto.setDebtor(idLoggedUser);
 		transferService.saveTransfer(transferDto);
+		userService.addTransfer(transferDto);
+
 		return "redirect:/user/transfer";
 	}
 

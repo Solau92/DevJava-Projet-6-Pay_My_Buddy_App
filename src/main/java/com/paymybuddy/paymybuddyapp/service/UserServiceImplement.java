@@ -1,8 +1,9 @@
 package com.paymybuddy.paymybuddyapp.service;
 
+import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
+import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-//import com.paymybuddy.paymybuddyapp.repository.ContactRepository;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,17 +19,12 @@ public class UserServiceImplement implements UserService {
     private UserRepository userRepository;
     private TransferRepository transferRepository;
 
-/*
-    private ContactRepository contactRepository;
-*/
-
     private PasswordEncoder passwordEncoder;
 
     public UserServiceImplement(UserRepository userRepository, TransferRepository transferRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.transferRepository = transferRepository;
         this.passwordEncoder = passwordEncoder;
-//        this.contactRepository = contactRepository;
     }
 
     @Override
@@ -69,13 +65,46 @@ public class UserServiceImplement implements UserService {
     @Override
     public void addContact(User friend) {
         User user = getLoggedUser();
-        System.out.println("Dans add contact, user id : " + user.getId());
-        System.out.println("Dans add contact, friend id : " + friend.getId());
-            user.printContact();
         user.getContacts().add(friend);
-            user.printContact();
         userRepository.save(user);
-//        contactRepository.save();
+    }
+
+    @Override
+    public void addTransfer(TransferDto transferDto) {
+        User user = getLoggedUser();
+        Transfer transfer = new Transfer();
+        transfer.setDate(transferDto.getDate());
+        transfer.setReason(transferDto.getReason());
+        transfer.setDebtor(transferDto.getDebtor());
+        transfer.setCreditor(transferDto.getCreditor());
+        user.getTransfers_done().add(transfer);
+
+/*        User userdeb = getLoggedUser();
+        Optional<User> usercred = userRepository.findById(transferDto.getCreditor());
+
+        Transfer transfer = new Transfer();
+        transfer.setDate(transferDto.getDate());
+        transfer.setReason(transferDto.getReason());
+        transfer.setDebtor(transferDto.getDebtor());
+        transfer.setCreditor(transferDto.getCreditor());
+        userdeb.getTransfers_done().add(transfer);
+
+        userdeb.setAccountBalance(userdeb.getAccountBalance() - transferDto.getAmount());
+        usercred.get().setAccountBalance(usercred.get().getAccountBalance() + transferDto.getAmount());
+        userRepository.save(userdeb);
+        userRepository.save(usercred.get());*/
+    }
+
+    @Override
+    public boolean isFriendAlreadyInList(User loggedUser, String friendEmail) {
+
+        List<User> contacts = loggedUser.getContacts();
+        for (User u : contacts) {
+            if (u.getEmail().equals(friendEmail)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private UserDto mapToUserDto(User user) {
