@@ -14,14 +14,21 @@
     <section id="logPage">
 
         <div th:if="${param.error}">
-            <div class="alert alert-danger">Invalid Email or Password</div>
+            <div class="text-alert">Invalid Email or Password</div>
         </div>
-        <div th:if="${param.logout}">
-            <div class="alert alert-success"> You have been logged out.</div>
-        </div>
+<!--        <div th:if="${param.logout}">-->
+<!--            <div class="text-alert"> You have been logged out.</div>-->
+<!--        </div>-->
+
 
         <div>
             <h1>Pay My Buddy</h1>
+        </div>
+
+        <div th:if="${param.success}">
+            <div class="text-alert">
+                You have successfully registered our app !
+            </div>
         </div>
 
         <form

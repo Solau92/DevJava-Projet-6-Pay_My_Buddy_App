@@ -56,14 +56,37 @@
         >
 
             <div>
-                <select th:field="*{creditor}">
+                <select th:field="*{creditorEmail}">
+                    <option selected th:value="email">Select A Connection</option>
+                    <option th:each="user : ${connections}"
+                            th:text="${user.email}"
+                            th:value="${user.email}"
+                    >
+                </select>
+            </div>
+
+
+   <!--         <div>
+                <select>
+                    <option selected>Select A Connection</option>
+                    <option th:each="user : ${connections}"
+                            th:text="${user.email}"
+                            th:value="${user.email}"
+                            th:field="*{creditorEmail}"
+                    >
+
+                </select>
+            </div>-->
+
+<!--            <div>
+                <select th:field="*{???}">
                     <option value="">Select A Connection</option>
                     <option th:each="user : ${connections}"
                     th:value="${user.email}"
                     th:text="${user.email}"
                     >
                 </select>
-            </div>
+            </div>-->
 
             <div class="ligne">
                 <label class="formulaire">Amount</label>
@@ -78,18 +101,6 @@
                 />
             </div>
 
-<!--            <div class="ligne">
-                <label class="formulaire">Creditor</label>
-                <input
-                        class="form-control"
-                        id="creditor"
-                        name="creditor"
-                        placeholder="creditor id"
-                        th:field="*{creditor}"
-                        type="text"
-                />
-            </div>-->
-
             <div class="ligne">
                 <label class="formulaire">Reason</label>
                 <input
@@ -102,28 +113,17 @@
                 />
             </div>
 
-            <!--					<div class="ligne">-->
-            <!--						<label class="formulaire">Debtor</label>-->
-            <!--						<input-->
-            <!--								class="form-control"-->
-            <!--								id="debtor"-->
-            <!--								name="debtor"-->
-            <!--								placeholder="debtor id"-->
-            <!--								th:field="*{debtor}"-->
-            <!--								type="text"-->
-            <!--						/>-->
-            <!--					</div>-->
+            <div th:if="${param.success}">
+                <div class="text-alert">The transfer was successfully done !</div>
+            </div>
 
+<!--            <div th:if="${param.error}">
+                <div class="text-alert">Error, the transfer was not effected !</div>
+            </div>-->
 
-            <!--					<div><form>
-                                    <select>
-                                        <option value=""> Select A Connection </option>
-                                    </select>
-                                </form></div>
-
-                                <div><form>
-                                    <input type="number" min="0" placeholder="0.0€"></input>
-                                </form></div>-->
+            <div th:if="${param.error}">
+                <div class="text-alert" th:text="${message}"></div>
+            </div>
 
             <div>
                 <button class="greenButton" type="submit">Pay</button>

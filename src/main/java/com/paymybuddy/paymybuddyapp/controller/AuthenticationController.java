@@ -48,27 +48,17 @@ public class AuthenticationController {
 	                           BindingResult result,
 	                           Model model) {
 
-		User existingUser = userService.findUserByEmail(userDto.getEmail());
-
-		if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+		if(userService.findUserByEmail(userDto.getEmail()) != null) {
 			result.rejectValue("email", null,
 					"There is already an account registered with this email");
 		}
 
-//		if (userDto.getEmail().equals("")) {
-//			result.rejectValue("email", null, "Email field cannot be empty");
-//		}
-//		if(userDto.getPassword().equals("")) {
-//			result.rejectValue("password", null, "Password field cannot be empty");
-//		}
-
 		if (result.hasErrors()) {
-			model.addAttribute("user", userDto);
 			return "register";
 		}
 
 		userService.saveUser(userDto);
-		return "redirect:/login";
+		return "redirect:/index?success";
 	}
 
 	@GetMapping("/login")

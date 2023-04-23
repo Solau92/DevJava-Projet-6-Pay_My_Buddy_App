@@ -28,6 +28,10 @@ public class TransferDto {
 
 	private Integer creditor;
 
+	private String creditorEmail;
+
+
+
 	private Integer debtor;
 
 	public Integer getId() {
@@ -76,5 +80,13 @@ public class TransferDto {
 
 	public void setDebtor(Integer debtor) {
 		this.debtor = debtor;
+	}
+
+	public String getCreditorEmail() {
+		return creditorEmail;
+	}
+
+	public void setCreditorEmail(String creditorEmail) {
+		this.creditorEmail = creditorEmail;
 	}
 }

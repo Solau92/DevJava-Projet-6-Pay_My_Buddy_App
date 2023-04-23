@@ -37,25 +37,99 @@
 
 <main>
 
-    <section>
-        Account balance :
-            <p th:text="${accountBalance}"></p>
-        </table>
+    <section id="titre1">
 
-    </section>
-
-    <section>
         <div>
-            <form>
-                <a><input class="blueButton" type="button" onclick=window.location.href="/user/profile"
-                          value="Edit profile"></input></a>
-                <a><input class="blueButton" type="button" onclick=window.location.href="/user/contact"
-                          value="New contact"></input></a>
-                <a><input class="blueButton" type="button" onclick=window.location.href="/user/transfer"
-                          value="New transfer"></input></a>
-            </form>
+            <h2>
+                Welcome <span th:text="${firstname}"></span> !
+            </h2>
+        </div>
+
+        <div>
+            <a><input class="blueButton" type="button" onclick=window.location.href="/user/profile"
+                      value="View profile"></input></a>
+            <a><input class="blueButton" type="button" onclick=window.location.href="/user/contact"
+                      value="New contact"></input></a>
+            <a><input class="blueButton" type="button" onclick=window.location.href="/user/transfer"
+                      value="New transfer"></input></a>
+
         </div>
     </section>
+
+    <section id="newTransfer">
+
+        <div class="ligne">
+            Account balance : <span th:text="${accountBalance}"></span>
+        </div>
+
+    </section>
+
+    <section id="titre1">
+
+        <h2>
+            Bank
+        </h2>
+
+    </section>
+
+    <section id="newTransfer">
+
+        <form
+                class="row"
+                method="post"
+                role="form"
+                th:action="@{/user/home/addmoney}"
+                th:object="${amount}"
+        >
+
+            <div class="ligne">
+                <label class="formulaire">Enter amount</label>
+                <input
+                        id="amount"
+                        name="amount"
+                        type="number"
+                        min="0"
+                        value=0.0
+                />
+            </div>
+
+            <div th:if="${param.successAdd}">
+                <div class="text-alert" th:text="${message}"></div>
+            </div>
+
+            <div th:if="${param.errorAdd}">
+                <div class="text-alert" th:text="${message}"></div>
+            </div>
+
+            <div>
+                <button class="greenButton" type="submit">Add money</button>
+            </div>
+
+        </form>
+    </section>
+
+    <section id="newTransfer">
+        <form
+                class="row"
+                method="post"
+                role="form"
+                th:action="@{/user/home/withdrawmoney}"
+        >
+            <div>
+                <button class="greenButton" type="submit">Recup' money</button>
+            </div>
+
+            <div th:if="${param.successWithdraw}">
+                <div class="text-alert" th:text="${message}"></div>
+            </div>
+
+            <div th:if="${param.errorWithdraw}">
+                <div class="text-alert" th:text="${message}"></div>
+            </div>
+
+        </form>
+    </section>
+
 
 </main>
 

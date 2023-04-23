@@ -45,15 +45,15 @@
     <section id="newTransfer">
 
         <form
+                class="row"
                 method="post"
                 role="form"
                 th:action="@{/user/contact/save}"
                 th:object="${email}"
         >
 
-
-            <div class="ligne">
-                <label class="formulaire">Email</label>
+            <div>
+                <label class="formulaire">Email      </label>
                 <input
                         class="form-control"
                         id="email"
@@ -61,6 +61,7 @@
                         placeholder="Enter friend email"
                         type="text"
                 />
+            </div>
 
                 <div th:if="${param.success}">
                     <div class="text-alert">Your friend was successfully added !</div>
@@ -70,12 +71,10 @@
                     <div class="text-alert" th:text="${message}"></div>
                 </div>
 
+                <div>
+                    <button class="greenButton" type="submit">Add</button>
+                </div>
 
-            </div>
-
-            <div>
-                <button class="greenButton" type="submit">Add</button>
-            </div>
         </form>
 
     </section>

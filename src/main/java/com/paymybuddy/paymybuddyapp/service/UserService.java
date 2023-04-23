@@ -21,4 +21,8 @@ public interface UserService {
     void addTransfer(TransferDto transferDto);
 
 	boolean isFriendAlreadyInList(User loggedUser, String email);
+
+	void addMoney(double amount) throws Exception;
+
+	void withdrawMoney();
 }

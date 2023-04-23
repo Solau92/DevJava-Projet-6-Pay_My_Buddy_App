@@ -3,6 +3,7 @@ package com.paymybuddy.paymybuddyapp.controller;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,9 @@ public class TransferController {
 	private UserService userService;
 
 	private TransferService transferService;
+
+	private String errorMessage;
+
 
 	public TransferController(UserService userService, TransferService transferService){
 		this.userService = userService;
@@ -43,6 +47,8 @@ public class TransferController {
 		List<User> connections = getLoggedUser().getContacts();
 		model.addAttribute("connections", connections);
 
+		model.addAttribute("message", errorMessage);
+
 	return "transfer";
 	}
 
@@ -50,13 +56,35 @@ public class TransferController {
 	public String addTransfer(@ModelAttribute("transfer") TransferDto transferDto,
 	                          BindingResult result,
 	                          Model model) {
-		User loggedUser = getLoggedUser();
-		Integer idLoggedUser = loggedUser.getId();
-		transferDto.setDebtor(idLoggedUser);
-		transferService.saveTransfer(transferDto);
-		userService.addTransfer(transferDto);
 
-		return "redirect:/user/transfer";
+		try{
+			// Erreurs :
+			// crédit insuffisant
+			//
+			User loggedUser = getLoggedUser();
+			Integer idLoggedUser = loggedUser.getId();
+			transferDto.setDebtor(idLoggedUser);
+
+			transferDto.setCreditor(userService.findUserByEmail(transferDto.getCreditorEmail()).getId());
+
+			if(transferDto.getAmount()*1.05 > loggedUser.getAccountBalance()) {
+				throw new InsufficientBalanceException();
+			}
+			transferService.saveTransfer(transferDto);
+			userService.addTransfer(transferDto);
+
+			return "redirect:/user/transfer?success";
+
+		} catch (Exception exception){
+
+			if(exception instanceof InsufficientBalanceException) {
+				errorMessage = "Your balance account is insufficient, the transfer was not effected";
+			} else {
+				errorMessage = "Unknown error, the transfer was not effected";
+			}
+
+			return "redirect:/user/transfer?error";
+		}
 	}
 
 	private User getLoggedUser() {

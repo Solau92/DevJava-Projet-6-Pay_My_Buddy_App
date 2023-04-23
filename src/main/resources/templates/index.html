@@ -18,6 +18,12 @@
             <h1>Pay My Buddy</h1>
         </div>
 
+        <div th:if="${param.success}">
+            <div class="text-alert">
+                You have successfully registered our app !
+            </div>
+        </div>
+
         <div>
             <button class="blueButton" type="button" onclick=window.location.href="/register">Register</button>
             <button class="blueButton" type="button" onclick=window.location.href="/login">Login</button>
