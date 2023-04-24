@@ -2,7 +2,6 @@ package com.paymybuddy.paymybuddyapp.service;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
-import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +56,11 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
+	public String findUserEmailById(Integer id) {
+		return userRepository.findById(id).get().getEmail();
+	}
+
+	@Override
 	public List<UserDto> findAllUsers() {
 		List<User> users = userRepository.findAll();
 		return users.stream()
@@ -80,6 +85,24 @@ public class UserServiceImplement implements UserService {
 		User friend = userRepository.findByEmail(transferDto.getCreditorEmail());
 		double accountModFriend = friend.getAccountBalance() + transferDto.getAmount();
 		friend.setAccountBalance(accountModFriend);
+
+		// Ajouté pour pouvoir supprimer "saveTransfer" dans TransferService
+		// Mais marche pas, faut revoir si lien ok entre User / transfer
+/*		Transfer transfer = new Transfer();
+		transfer.setDate(transferDto.getDate());
+		transfer.setAmount(transferDto.getAmount());
+		transfer.setDebtor(transferDto.getDebtor());
+		transfer.setCreditor(transferDto.getCreditor());
+		transfer.setDate(transferDto.getDate());
+		transfer.setReason(transferDto.getReason());
+		transfer.setDate(LocalDate.now());
+
+		System.out.print("Before :");
+		user.printTransfersDone();
+		user.getTransfers_done().add(transfer);
+		System.out.print("After :");
+		user.printTransfersDone();*/
+		// //
 
 		userRepository.save(user);
 		userRepository.save(friend);

@@ -66,27 +66,27 @@
             </div>
 
 
-   <!--         <div>
-                <select>
-                    <option selected>Select A Connection</option>
-                    <option th:each="user : ${connections}"
-                            th:text="${user.email}"
-                            th:value="${user.email}"
-                            th:field="*{creditorEmail}"
-                    >
+            <!--         <div>
+                         <select>
+                             <option selected>Select A Connection</option>
+                             <option th:each="user : ${connections}"
+                                     th:text="${user.email}"
+                                     th:value="${user.email}"
+                                     th:field="*{creditorEmail}"
+                             >
 
-                </select>
-            </div>-->
+                         </select>
+                     </div>-->
 
-<!--            <div>
-                <select th:field="*{???}">
-                    <option value="">Select A Connection</option>
-                    <option th:each="user : ${connections}"
-                    th:value="${user.email}"
-                    th:text="${user.email}"
-                    >
-                </select>
-            </div>-->
+            <!--            <div>
+                            <select th:field="*{???}">
+                                <option value="">Select A Connection</option>
+                                <option th:each="user : ${connections}"
+                                th:value="${user.email}"
+                                th:text="${user.email}"
+                                >
+                            </select>
+                        </div>-->
 
             <div class="ligne">
                 <label class="formulaire">Amount</label>
@@ -117,9 +117,9 @@
                 <div class="text-alert">The transfer was successfully done !</div>
             </div>
 
-<!--            <div th:if="${param.error}">
-                <div class="text-alert">Error, the transfer was not effected !</div>
-            </div>-->
+            <!--            <div th:if="${param.error}">
+                            <div class="text-alert">Error, the transfer was not effected !</div>
+                        </div>-->
 
             <div th:if="${param.error}">
                 <div class="text-alert" th:text="${message}"></div>
@@ -148,10 +148,11 @@
                 </tr>
             </head>
             <body>
-            <tr th:each="transfer: ${transfers}"/>
-            <td th:text="${transfer.creditor}"/>
-            <td th:text="${transfer.reason}"/>
-            <td th:text="${transfer.amount}"/>
+
+            <tr th:each="transferDto: ${transfersDone}">
+                <td th:text="${transferDto.creditorEmail}"/>
+                <td th:text="${transferDto.reason}"/>
+                <td th:text="${transferDto.amount}"/>
             </tr>
 
             </body>

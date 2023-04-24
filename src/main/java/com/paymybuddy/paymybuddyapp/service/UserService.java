@@ -5,6 +5,7 @@ import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -14,7 +15,9 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
-    List<UserDto> findAllUsers();
+	String findUserEmailById(Integer id);
+
+	List<UserDto> findAllUsers();
 
     void addContact(User friend);
 
@@ -25,4 +28,6 @@ public interface UserService {
 	void addMoney(double amount) throws Exception;
 
 	void withdrawMoney();
+
+
 }

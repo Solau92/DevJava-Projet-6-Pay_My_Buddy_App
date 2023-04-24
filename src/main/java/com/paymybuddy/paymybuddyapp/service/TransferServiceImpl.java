@@ -2,10 +2,12 @@ package com.paymybuddy.paymybuddyapp.service;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
+import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,11 +16,11 @@ public class TransferServiceImpl implements TransferService {
 
 	private TransferRepository transferRepository;
 
-	private UserServiceImplement userServiceImplement;
+	private UserService userService;
 
-	public TransferServiceImpl(TransferRepository transferRepository, UserServiceImplement userServiceImplement){
+	public TransferServiceImpl(TransferRepository transferRepository, UserService userService){
 		this.transferRepository = transferRepository;
-		this.userServiceImplement = userServiceImplement;
+		this.userService = userService;
 	}
 
 	@Override
@@ -34,13 +36,35 @@ public class TransferServiceImpl implements TransferService {
 		transferRepository.save(transfer);
 	}
 
-	@Override
+/*	@Override
 	public List<TransferDto> findAllUsersTransfers(String email) {
 		List<Transfer> transfers = transferRepository.findAll();
 		return transfers.stream()
 				.map((transfer) -> mapToTransferDto(transfer))
 				.collect(Collectors.toList());
 		// TODO
+	}*/
+
+	@Override
+	public List<TransferDto> findAllUsersTransfers(User user) {
+		List<Transfer> transfers = user.getTransfers_done();
+		List<TransferDto> transfersDto = new ArrayList<>();
+		for (Transfer t : transfers) {
+			TransferDto transferDto = new TransferDto();
+			transferDto.setDate(t.getDate());
+			transferDto.setAmount(t.getAmount());
+			transferDto.setDebtor(t.getDebtor());
+			transferDto.setCreditor(t.getCreditor());
+			transferDto.setCreditorEmail(userService.findUserEmailById(t.getCreditor()));
+			transferDto.setDate(t.getDate());
+			transferDto.setReason(t.getReason());
+			transferDto.setDate(LocalDate.now());
+			transfersDto.add(transferDto);
+		}
+/*		return transfers.stream()
+				.map((transfer) -> mapToTransferDto(transfer))
+				.collect(Collectors.toList());*/
+		return transfersDto;
 	}
 
 	private TransferDto mapToTransferDto(Transfer transfer) {

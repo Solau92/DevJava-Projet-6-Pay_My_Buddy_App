@@ -37,12 +37,21 @@ public class TransferController {
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
 
-		List<Transfer> transfers = getLoggedUser().getTransfers_done();
+		List<TransferDto> transfersDone = transferService.findAllUsersTransfers(getLoggedUser());
+
+		System.out.println("Liste transferts : ");
+			int compteur = 0;
+			for (TransferDto t : transfersDone) {
+				System.out.println(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
+				compteur++;
+			}
+
+/*		List<Transfer> transfersDone = getLoggedUser().getTransfers_done();
 		System.out.print("liste transferts : ");
 		getLoggedUser().printTransfersDone();
-		// Plutôt chercher avec findAllTranserts
+		// Plutôt chercher avec findAllTranserts*/
 
-		model.addAttribute("transfers", transfers);
+		model.addAttribute("transfersDone", transfersDone);
 
 		List<User> connections = getLoggedUser().getContacts();
 		model.addAttribute("connections", connections);

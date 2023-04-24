@@ -15,16 +15,18 @@ public class User {
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
-			fetch = FetchType.EAGER
+			fetch = FetchType.EAGER,
+			mappedBy = "creditor" // rajouté
 	)
-	@JoinColumn(name = "id")
+//	@JoinColumn(name = "id")
 	List<Transfer> transfers_received = new ArrayList<>();
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
-			fetch = FetchType.EAGER
+			fetch = FetchType.EAGER,
+			mappedBy = "debtor" // rajouté
 	)
-	@JoinColumn(name = "id")
+//	@JoinColumn(name = "id")
 	List<Transfer> transfers_done = new ArrayList<>();
 	@ManyToMany(
 			fetch = FetchType.LAZY
@@ -147,7 +149,7 @@ public class User {
 	public void printTransfersDone() {
 		int compteur = 0;
 		for (Transfer t : this.getTransfers_done()) {
-			System.out.print(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
+			System.out.println(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
 			compteur++;
 		}
 	}

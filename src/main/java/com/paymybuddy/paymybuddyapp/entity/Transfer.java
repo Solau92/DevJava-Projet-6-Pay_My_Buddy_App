@@ -20,6 +20,7 @@ public class Transfer {
         this.reason = reason;
         this.creditor = creditor;
         this.debtor = debtor;
+//        this.creditorEmail = creditorEmail;
     }
 
     @Id
@@ -41,6 +42,16 @@ public class Transfer {
 
     @Column(nullable = false)
     private Integer debtor;
+
+//    private String creditorEmail;
+
+/*    @ManyToOne
+    @JoinColumn(name="creditor")
+    private Integer creditor;
+
+    @ManyToOne
+    @JoinColumn(name="debtor")
+    private Integer debtor;*/
 
     public Integer getId() {
         return id;
@@ -90,4 +101,11 @@ public class Transfer {
         this.debtor = debtor;
     }
 
+/*    public String getCreditorEmail() {
+        return creditorEmail;
+    }
+
+    public void setCreditorEmail(String creditorEmail) {
+        this.creditorEmail = creditorEmail;
+    }*/
 }
