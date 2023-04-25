@@ -3,13 +3,13 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -47,7 +47,7 @@ public class TransferServiceImpl implements TransferService {
 
 	@Override
 	public List<TransferDto> findAllUsersTransfers(User user) {
-		List<Transfer> transfers = user.getTransfers_done();
+		List<Transfer> transfers = user.getTransfersDone();
 		List<TransferDto> transfersDto = new ArrayList<>();
 		for (Transfer t : transfers) {
 			TransferDto transferDto = new TransferDto();
@@ -75,5 +75,14 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setDate(transferDto.getDate());
 		transfer.setReason(transferDto.getReason());
 		return transferDto;
+	}
+
+	@Override
+	public boolean isAccountBalanceSufficient(TransferDto transferDto, double accountBalance) throws InsufficientBalanceException {
+
+		if(transferDto.getAmount()*1.05 > accountBalance) {
+			throw new InsufficientBalanceException();
+		}
+			return true;
 	}
 }

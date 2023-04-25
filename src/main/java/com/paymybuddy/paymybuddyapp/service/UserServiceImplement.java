@@ -4,14 +4,15 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -155,9 +156,16 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public void withdrawMoney() {
+	public void withdrawMoney(double amountWithdrawn) throws Exception {
+
 		User user = getLoggedUser();
-		user.setAccountBalance(0);
+
+		if(amountWithdrawn > user.getAccountBalance()) {
+			throw new InsufficientBalanceException();
+		}
+
+		double accountModUser = user.getAccountBalance() - amountWithdrawn;
+		user.setAccountBalance(accountModUser);
 		userRepository.save(user);
 	}
 

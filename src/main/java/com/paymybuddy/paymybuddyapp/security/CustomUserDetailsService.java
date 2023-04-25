@@ -22,6 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
      User user = userRepository.findByEmail(email);
 
         if (user != null) {
@@ -31,15 +32,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     new ArrayList<GrantedAuthority>()
                     );
         }else{
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException("Invalid username or password");
         }
     }
-/*
-    private Collection< ? extends GrantedAuthority> mapRolesToAuthorities(Collection <Role> roles) {
-        Collection < ? extends GrantedAuthority> mapRoles = roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
-        return mapRoles;
-    }*/
 
 }

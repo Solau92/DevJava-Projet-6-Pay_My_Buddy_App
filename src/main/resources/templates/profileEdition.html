@@ -44,8 +44,13 @@
 
     <section id="profile">
 
-        <form
-                method="put"
+        <div>
+            Page under construction
+        </div>
+
+
+ <!--       <form
+                method="post"
                 role="form"
                 th:action="@{/user/update/save}"
                 th:object="${userupdated}"
@@ -54,7 +59,6 @@
             <div class="ligne">
                 <label class="formulaire">First Name</label>
                 <input
-                        class="form-control"
                         id="firstname"
                         name="firstname"
                         th:value="${firstname}"/>
@@ -63,7 +67,6 @@
             <div class="ligne">
                 <label class="formulaire">Last Name</label>
                 <input
-                        class="form-control"
                         id="lastname"
                         name="lastname"
                         th:value="${lastname}"
@@ -73,12 +76,11 @@
             <div class="ligne">
                 <label class="formulaire">Email</label>
                 <input
-                        class="form-control"
                         id="email"
                         name="email"
                         th:value="${email}"/>
-<!--                        th:field="*{email}"-->
-<!--                />-->
+&lt;!&ndash;                        th:field="*{email}"&ndash;&gt;
+&lt;!&ndash;                />&ndash;&gt;
             </div>
 
             <div class="ligne">
@@ -94,7 +96,7 @@
             <div>
                 <button class="greenButton" type="submit">Save</button>
             </div>
-        </form>
+        </form>-->
 
     </section>
 </main>

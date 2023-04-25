@@ -7,7 +7,7 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="styles.css">
     <link th:href="@{/css/styles.css}" rel="stylesheet"/>
-    <title>Home</title>
+    <title>PayMyBuddy - Home</title>
 </head>
 
 <body>
@@ -83,12 +83,13 @@
         >
 
             <div class="ligne">
-                <label class="formulaire">Enter amount</label>
+                <label class="formulaire">Add money from my bank account : enter amount</label>
                 <input
                         id="amount"
                         name="amount"
                         type="number"
                         min="0"
+                        step="0.01"
                         value=0.0
                 />
             </div>
@@ -114,10 +115,22 @@
                 method="post"
                 role="form"
                 th:action="@{/user/home/withdrawmoney}"
+                th:object="${amountWithdrawn}"
+
         >
-            <div>
-                <button class="greenButton" type="submit">Recup' money</button>
+
+            <div class="ligne">
+                <label class="formulaire">Send money on my bank account : enter amount</label>
+                <input
+                        id="amountWithdrawn"
+                        name="amountWithdrawn"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value=0.0
+                />
             </div>
+
 
             <div th:if="${param.successWithdraw}">
                 <div class="text-alert" th:text="${message}"></div>
@@ -125,6 +138,10 @@
 
             <div th:if="${param.errorWithdraw}">
                 <div class="text-alert" th:text="${message}"></div>
+            </div>
+
+            <div>
+                <button class="greenButton" type="submit">Withdraw money</button>
             </div>
 
         </form>

@@ -19,7 +19,7 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public void isContactValid(String friendEmail) throws Exception {
+	public boolean isContactValid(String friendEmail) throws Exception {
 
 		if(friendEmail.equals(getLoggedUser().getEmail())) {
 			throw new LoggedUserException();
@@ -28,6 +28,7 @@ public class ContactServiceImpl implements ContactService {
 		} else if(userService.isFriendAlreadyInList(getLoggedUser(), friendEmail)) {
 			throw new ContactAlreadyExistsException();
 		}
+		return true;
 	}
 
 	private User getLoggedUser() {

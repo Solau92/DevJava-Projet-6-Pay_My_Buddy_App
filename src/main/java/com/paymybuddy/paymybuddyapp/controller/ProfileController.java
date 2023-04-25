@@ -70,9 +70,7 @@ public class ProfileController {
 			return "register";
 		}*/
 
-		System.out.println("trying to updated user ! ");
 		userService.updateUser(userDto);
-		System.out.println("user was updated ! ou pas... ");
 		return "redirect:/profile";
 	}
 	private User getLoggedUser() {

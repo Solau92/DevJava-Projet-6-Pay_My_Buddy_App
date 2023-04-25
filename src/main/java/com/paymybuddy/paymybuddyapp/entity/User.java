@@ -2,7 +2,6 @@ package com.paymybuddy.paymybuddyapp.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class User {
 			mappedBy = "creditor" // rajouté
 	)
 //	@JoinColumn(name = "id")
-	List<Transfer> transfers_received = new ArrayList<>();
+	List<Transfer> transfersReceived = new ArrayList<>();
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
@@ -27,7 +26,7 @@ public class User {
 			mappedBy = "debtor" // rajouté
 	)
 //	@JoinColumn(name = "id")
-	List<Transfer> transfers_done = new ArrayList<>();
+	List<Transfer> transfersDone = new ArrayList<>();
 	@ManyToMany(
 			fetch = FetchType.LAZY
 	)
@@ -49,21 +48,21 @@ public class User {
 	private String firstname;
 	@Column
 	private String lastname;
-	@Column(name = "accountBalance")
+	@Column
 	private double accountBalance;
 
 	public User() {
 	}
 
-	public User(Integer id, String email, String password, String firstname, String lastname, double accountBalance, List<Transfer> transfers_received, List<Transfer> transfers_done, List<User> contacts) {
+	public User(Integer id, String email, String password, String firstname, String lastname, double accountBalance, List<Transfer> transfersReceived, List<Transfer> transfersDone, List<User> contacts) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.accountBalance = accountBalance;
-		this.transfers_received = transfers_received;
-		this.transfers_done = transfers_done;
+		this.transfersReceived = transfersReceived;
+		this.transfersDone = transfersDone;
 		this.contacts = contacts;
 	}
 
@@ -115,20 +114,20 @@ public class User {
 		this.accountBalance = accountBalance;
 	}
 
-	public List<Transfer> getTransfers_received() {
-		return transfers_received;
+	public List<Transfer> getTransfersReceived() {
+		return transfersReceived;
 	}
 
-	public void setTransfers_received(List<Transfer> transfers_received) {
-		this.transfers_received = transfers_received;
+	public void setTransfersReceived(List<Transfer> transfersReceived) {
+		this.transfersReceived = transfersReceived;
 	}
 
-	public List<Transfer> getTransfers_done() {
-		return transfers_done;
+	public List<Transfer> getTransfersDone() {
+		return transfersDone;
 	}
 
-	public void setTransfers_done(List<Transfer> transfers_done) {
-		this.transfers_done = transfers_done;
+	public void setTransfersDone(List<Transfer> transfersDone) {
+		this.transfersDone = transfersDone;
 	}
 
 	public List<User> getContacts() {
@@ -148,7 +147,7 @@ public class User {
 
 	public void printTransfersDone() {
 		int compteur = 0;
-		for (Transfer t : this.getTransfers_done()) {
+		for (Transfer t : this.getTransfersDone()) {
 			System.out.println(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
 			compteur++;
 		}

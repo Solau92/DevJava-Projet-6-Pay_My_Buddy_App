@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="transfer")
-//@DynamicUpdate
 public class Transfer {
 
     public Transfer() {
@@ -20,7 +19,6 @@ public class Transfer {
         this.reason = reason;
         this.creditor = creditor;
         this.debtor = debtor;
-//        this.creditorEmail = creditorEmail;
     }
 
     @Id
@@ -43,7 +41,6 @@ public class Transfer {
     @Column(nullable = false)
     private Integer debtor;
 
-//    private String creditorEmail;
 
 /*    @ManyToOne
     @JoinColumn(name="creditor")

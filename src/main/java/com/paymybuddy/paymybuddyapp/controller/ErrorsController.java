@@ -5,32 +5,40 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ErrorsController implements ErrorController {
 
+	private String message;
+
 	@GetMapping("/error")
-	public String handleError(HttpServletRequest request) {
+	public String handleError(HttpServletRequest request, Model model) {
 
-		String errorPage = "error"; // default
-
-/*		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
 		if (status != null) {
 			Integer statusCode = Integer.valueOf(status.toString());
 
 			if (statusCode == HttpStatus.NOT_FOUND.value()) {
-				errorPage = "error404";
+				message = "Error 404";
 
 			} else if (statusCode == HttpStatus.FORBIDDEN.value()) {
-				errorPage = "error403";
+				message = "Error 403";
 
 			} else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-				errorPage = "error";
+				message = "Error 500";
+
+			} else {
+				message = "Unknown error";
 
 			}
-		}*/
-		return errorPage;
+		}
+
+		model.addAttribute("message", message);
+
+		return "error";
 	}
+
 }

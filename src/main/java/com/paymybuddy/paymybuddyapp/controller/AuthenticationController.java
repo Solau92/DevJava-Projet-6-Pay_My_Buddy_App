@@ -79,14 +79,14 @@ public class AuthenticationController {
 		return "logoff";
 	}
 
-	@GetMapping("/users")
+/*	@GetMapping("/users")
 	public String users(Model model) {
 		List<UserDto> users = userService.findAllUsers();
 		model.addAttribute("users", users);
 		return "users";
-	}
+	}*/
 
-	private void getEmail() {
+/*	private void getEmail() {
 
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -98,7 +98,7 @@ public class AuthenticationController {
 		}
 
 		this.LoggedUserEmail = username;
-	}
+	}*/
 
 
 /*	@GetMapping("/user/profile")

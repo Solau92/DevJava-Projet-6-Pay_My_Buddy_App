@@ -1,14 +1,11 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
-import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
 import com.paymybuddy.paymybuddyapp.service.ContactService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class ContactController {
@@ -28,7 +23,11 @@ public class ContactController {
 
 	private ContactService contactService;
 
-	private String errorMessage;
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
 
 	public ContactController(UserService userService, ContactService contactService){
 		this.userService = userService;
@@ -41,7 +40,7 @@ public class ContactController {
 		model.addAttribute("email", friendEmail);
 		List<User> contacts = getLoggedUser().getContacts();
 		model.addAttribute("contacts", contacts);
-		model.addAttribute("message", errorMessage);
+		model.addAttribute("message", message);
 		return "contact";
 	}
 
@@ -54,16 +53,17 @@ public class ContactController {
 			contactService.isContactValid(email);
 			User friend = userService.findUserByEmail(email);
 			userService.addContact(friend);
+			message = "Your friend was successfully added !";
 			return "redirect:/user/contact?success";
 		} catch (Exception exception) {
 			if(exception instanceof LoggedUserException) {
-				errorMessage = "You can't add yourself to your list of contacts";
+				message = "You can't add yourself to your list of contacts";
 			} else if (exception instanceof ContactNotFoundException){
-				errorMessage = "This contact was not found";
+				message = "This contact was not found";
 			} else if (exception instanceof ContactAlreadyExistsException) {
-				errorMessage = "This contact is already in your list";
+				message = "This contact is already in your list";
 			} else {
-				errorMessage = "Error, try again";
+				message = "Error, try again";
 			}
 			return "redirect:/user/contact?error";
 		}

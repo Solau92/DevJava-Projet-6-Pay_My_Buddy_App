@@ -3,9 +3,9 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -21,13 +21,13 @@ public interface UserService {
 
     void addContact(User friend);
 
-    void addTransfer(TransferDto transferDto);
+    void addTransfer(TransferDto transferDto) throws Exception;
 
 	boolean isFriendAlreadyInList(User loggedUser, String email);
 
 	void addMoney(double amount) throws Exception;
 
-	void withdrawMoney();
+	void withdrawMoney(double amountWithdrawn) throws Exception;
 
 
 }

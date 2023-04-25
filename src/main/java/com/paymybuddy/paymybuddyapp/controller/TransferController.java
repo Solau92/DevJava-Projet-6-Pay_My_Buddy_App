@@ -1,11 +1,11 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
-import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class TransferController {
@@ -23,7 +24,11 @@ public class TransferController {
 
 	private TransferService transferService;
 
-	private String errorMessage;
+	public String getMessage() {
+		return message;
+	}
+
+	private String message;
 
 
 	public TransferController(UserService userService, TransferService transferService){
@@ -39,13 +44,6 @@ public class TransferController {
 
 		List<TransferDto> transfersDone = transferService.findAllUsersTransfers(getLoggedUser());
 
-		System.out.println("Liste transferts : ");
-			int compteur = 0;
-			for (TransferDto t : transfersDone) {
-				System.out.println(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
-				compteur++;
-			}
-
 /*		List<Transfer> transfersDone = getLoggedUser().getTransfers_done();
 		System.out.print("liste transferts : ");
 		getLoggedUser().printTransfersDone();
@@ -56,7 +54,7 @@ public class TransferController {
 		List<User> connections = getLoggedUser().getContacts();
 		model.addAttribute("connections", connections);
 
-		model.addAttribute("message", errorMessage);
+		model.addAttribute("message", message);
 
 	return "transfer";
 	}
@@ -66,30 +64,35 @@ public class TransferController {
 	                          BindingResult result,
 	                          Model model) {
 
+		User loggedUser = getLoggedUser();
+
+		if (loggedUser == null) {
+			message = "Logged user not found, the transfer was not effected";
+			return "redirect:/user/transfer?error";
+		}
+
 		try{
-			// Erreurs :
-			// crédit insuffisant
-			//
-			User loggedUser = getLoggedUser();
+
 			Integer idLoggedUser = loggedUser.getId();
 			transferDto.setDebtor(idLoggedUser);
 
 			transferDto.setCreditor(userService.findUserByEmail(transferDto.getCreditorEmail()).getId());
 
-			if(transferDto.getAmount()*1.05 > loggedUser.getAccountBalance()) {
-				throw new InsufficientBalanceException();
-			}
+			transferService.isAccountBalanceSufficient(transferDto, loggedUser.getAccountBalance());
+
 			transferService.saveTransfer(transferDto);
 			userService.addTransfer(transferDto);
+
+			message = "The transfer was successfully done ! You have now "  + loggedUser.getAccountBalance()+  " € on your account";
 
 			return "redirect:/user/transfer?success";
 
 		} catch (Exception exception){
 
 			if(exception instanceof InsufficientBalanceException) {
-				errorMessage = "Your balance account is insufficient, the transfer was not effected";
+				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance()/1.05 + " €";
 			} else {
-				errorMessage = "Unknown error, the transfer was not effected";
+				message = "Unknown error, the transfer was not effected";
 			}
 
 			return "redirect:/user/transfer?error";
@@ -97,8 +100,9 @@ public class TransferController {
 	}
 
 	private User getLoggedUser() {
-		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return loggedUser;
+		// TODO reporter cette méthode dans les autres contrôleurs
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
 
 }

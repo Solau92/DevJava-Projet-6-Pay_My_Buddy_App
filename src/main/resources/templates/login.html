@@ -5,7 +5,7 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>PayMyBuddy - Login</title>
     <link th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 
@@ -13,16 +13,12 @@
 <main>
     <section id="logPage">
 
-        <div th:if="${param.error}">
-            <div class="text-alert">Invalid Email or Password</div>
-        </div>
-<!--        <div th:if="${param.logout}">-->
-<!--            <div class="text-alert"> You have been logged out.</div>-->
-<!--        </div>-->
-
-
         <div>
             <h1>Pay My Buddy</h1>
+        </div>
+
+        <div th:if="${param.error}">
+            <div class="text-alert">Invalid Email or Password</div>
         </div>
 
         <div th:if="${param.success}">
@@ -62,8 +58,6 @@
                 <button type="submit" class="blueButton">Submit</button>
             </div>
         </form>
-
-
     </section>
 </main>
 </body>
