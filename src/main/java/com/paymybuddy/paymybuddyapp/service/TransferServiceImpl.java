@@ -49,6 +49,7 @@ public class TransferServiceImpl implements TransferService {
 	public List<TransferDto> findAllUsersTransfers(User user) {
 		List<Transfer> transfers = user.getTransfersDone();
 		List<TransferDto> transfersDto = new ArrayList<>();
+
 		for (Transfer t : transfers) {
 			TransferDto transferDto = new TransferDto();
 			transferDto.setDate(t.getDate());

@@ -4,6 +4,8 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,8 +179,15 @@ public class UserServiceImplTest {
 	@Test
 	void isFriendAlreadyInList_Yes_Test(){
 
+/*		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when().thenReturn(true);
 
+		// WHEN
+		Boolean result = userService.isFriendAlreadyInList(friend.getEmail());
 
+		// THEN
+		assertTrue(result);*/
 
 		fail("not yet implemented");
 	}
@@ -198,27 +207,56 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	void addMoney_Ok_Test(){
+	void addMoney_Ok_Test() throws Exception {
 
 		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
+		userService.addMoney(80);
 
 		// THEN
-
-		fail("not yet implemented");
+		assertEquals(185, loggedUser.getAccountBalance());
 	}
 
 	@Test
-	void withdrawMoney_Ok_Test(){
+	void addMoney_AmountEqualsZero_Test() throws Exception {
 
 		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
+		// THEN
+	assertThrows(AmountZeroException.class, ()->userService.addMoney(0));
+
+	}
+
+	@Test
+	void withdrawMoney_Ok_Test() throws Exception {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
+
+		// WHEN
+		userService.withdrawMoney(105);
 
 		// THEN
+		assertEquals(0, loggedUser.getAccountBalance());
+	}
 
-		fail("not yet implemented");
+	@Test
+	void withdrawMoney_InsufficientBalance_Test() throws Exception {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
+
+		// WHEN
+				// THEN
+		assertThrows(InsufficientBalanceException.class, ()->userService.withdrawMoney(200));
 	}
 
 

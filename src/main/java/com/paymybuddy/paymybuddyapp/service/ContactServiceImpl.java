@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,13 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	private User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
+	}
+
+/*	private User getLoggedUser() {
 		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		return loggedUser;
-	}
+	}*/
 
 }
