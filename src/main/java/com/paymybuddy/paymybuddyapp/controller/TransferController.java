@@ -42,7 +42,14 @@ public class TransferController {
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
 
-		List<TransferDto> transfersDone = transferService.findAllUsersTransfers(getLoggedUser());
+		User loggedUser = getLoggedUser();
+
+		if (loggedUser == null) {
+			message = "Logged user not found, the transfer was not effected";
+			return "redirect:/user/transfer?error";
+		}
+
+		List<TransferDto> transfersDone = transferService.findAllUsersTransfers(loggedUser);
 
 /*		List<Transfer> transfersDone = getLoggedUser().getTransfers_done();
 		System.out.print("liste transferts : ");

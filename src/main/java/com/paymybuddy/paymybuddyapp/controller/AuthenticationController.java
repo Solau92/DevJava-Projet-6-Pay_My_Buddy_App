@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
+import com.paymybuddy.paymybuddyapp.service.TransferServiceImpl;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,11 +52,12 @@ public class AuthenticationController {
 		if(userService.findUserByEmail(userDto.getEmail()) != null) {
 			result.rejectValue("email", null,
 					"There is already an account registered with this email");
-		}
-
-		if (result.hasErrors()) {
 			return "register";
 		}
+
+/*		if (result.hasErrors()) {
+			return "register";
+		}*/
 
 		userService.saveUser(userDto);
 		return "redirect:/index?success";

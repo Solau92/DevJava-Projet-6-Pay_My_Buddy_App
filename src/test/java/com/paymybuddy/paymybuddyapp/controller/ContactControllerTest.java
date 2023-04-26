@@ -7,6 +7,7 @@ import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import com.paymybuddy.paymybuddyapp.service.ContactService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,27 +41,30 @@ public class ContactControllerTest {
 	@Mock
 	private BindingResult result;
 
-	private static User user = new User();
+	private static User loggedUser = new User();
 
+	@BeforeEach
 	void setUp(){
-		user.setId(1);
-		user.setFirstname("firstnameTest");
-		user.setLastname("lastnameTest");
-		user.setEmail("emailTest@email.com");
-		user.setPassword("passwordTest");
-		user.setAccountBalance(100.00);
+		loggedUser.setId(1);
+		loggedUser.setFirstname("firstnameTest");
+		loggedUser.setLastname("lastnameTest");
+		loggedUser.setEmail("emailTest@email.com");
+		loggedUser.setPassword("passwordTest");
+		loggedUser.setAccountBalance(100.00);
 	}
 
 	@Test
 	void getContact_Ok_Test() {
 
 		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
 
 		// WHEN
+		String expected = contactController.contact(model);
 
 		// THEN
-
-		fail("not yet implemented");
+		assertEquals("contact", expected);
+		assertNull(contactController.getMessage());
 	}
 
 	@Test
@@ -68,8 +72,8 @@ public class ContactControllerTest {
 
 		// GIVEN
 		when(contactService.isContactValid(anyString())).thenReturn(true);
-		when(userRepository.findByEmail(anyString())).thenReturn(user);
-		when(userRepository.save(any(User.class))).thenReturn(user);
+		when(userRepository.findByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
 		contactController.addContact("email", result, model);

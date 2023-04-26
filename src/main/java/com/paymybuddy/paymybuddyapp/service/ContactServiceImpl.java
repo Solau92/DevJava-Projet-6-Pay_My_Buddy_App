@@ -25,7 +25,7 @@ public class ContactServiceImpl implements ContactService {
 			throw new LoggedUserException();
 		} else if(Objects.isNull(userService.findUserByEmail(friendEmail))) {
 			throw new ContactNotFoundException();
-		} else if(userService.isFriendAlreadyInList(getLoggedUser(), friendEmail)) {
+		} else if(userService.isFriendAlreadyInList(friendEmail)) {
 			throw new ContactAlreadyExistsException();
 		}
 		return true;

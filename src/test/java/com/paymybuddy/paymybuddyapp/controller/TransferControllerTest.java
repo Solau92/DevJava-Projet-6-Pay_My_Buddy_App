@@ -17,10 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.mockito.ArgumentMatchers;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TransferControllerTest {
-
 
 	@InjectMocks
 	private TransferController transferController;
@@ -52,7 +51,9 @@ public class TransferControllerTest {
 
 	private static Transfer transfer = new Transfer();
 
-	private static TransferDto transferDto = new TransferDto();
+	private static TransferDto transferDto1 = new TransferDto();
+	private static TransferDto transferDto2 = new TransferDto();
+	private static List<TransferDto> transfersDone = new ArrayList<>();
 
 
 	@BeforeEach
@@ -79,23 +80,53 @@ public class TransferControllerTest {
 		transfer.setAmount(200);
 		transfer.setDate(LocalDate.now());
 
-		transferDto.setDebtor(2);
-		transferDto.setCreditor(1);
-		transferDto.setReason("because");
-		transferDto.setAmount(200);
-		transferDto.setDate(LocalDate.now());
-		transferDto.setCreditorEmail("friendEmailTest@email.com");
+		transferDto1.setDebtor(2);
+		transferDto1.setCreditor(1);
+		transferDto1.setReason("because");
+		transferDto1.setAmount(200);
+		transferDto1.setDate(LocalDate.now());
+		transferDto1.setCreditorEmail("friendEmailTest@email.com");
+
+		transferDto2.setDebtor(2);
+		transferDto2.setCreditor(1);
+		transferDto2.setReason("becauseAgain");
+		transferDto2.setAmount(50);
+		transferDto2.setDate(LocalDate.now());
+		transferDto2.setCreditorEmail("friendEmailTest@email.com");
+
+		transfersDone.add(transferDto1);
+		transfersDone.add(transferDto2);
+
 	}
 
 	@Test
 	void getTransfer_Ok_Test() {
 
 		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(transferService.findAllUsersTransfers(ArgumentMatchers.any(User.class))).thenReturn(transfersDone);
 
 		// WHEN
+		String expected = transferController.transfer(model);
 
 		// THEN
-		fail("not yet implemented");
+		assertEquals("transfer", expected);
+		assertEquals(null, transferController.getMessage());
+
+	}
+
+	@Test
+	void getTransfer_LoggedUserNull_Test() {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(null);
+
+		// WHEN
+		String expected = transferController.transfer(model);
+
+		// THEN
+		assertEquals("redirect:/user/transfer?error", expected);
+		assertEquals("Logged user not found, the transfer was not effected", transferController.getMessage());
 	}
 
 	@Test
@@ -108,7 +139,7 @@ public class TransferControllerTest {
 		when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(loggedUser).thenReturn(friendUser);
 
 		// WHEN
-		transferController.addTransfer(transferDto, result, model);
+		transferController.addTransfer(transferDto1, result, model);
 
 		// THEN
 		assertEquals("The transfer was successfully done ! You have now 105.0 € on your account", transferController.getMessage());
@@ -121,7 +152,7 @@ public class TransferControllerTest {
 		when(userService.findUserByEmail(anyString())).thenReturn(null);
 
 		// WHEN
-		transferController.addTransfer(transferDto, result, model);
+		transferController.addTransfer(transferDto1, result, model);
 
 		// THEN
 		assertEquals("Logged user not found, the transfer was not effected", transferController.getMessage());
@@ -135,7 +166,7 @@ public class TransferControllerTest {
 		when(transferService.isAccountBalanceSufficient(ArgumentMatchers.any(TransferDto.class), anyDouble())).thenThrow(InsufficientBalanceException.class);
 
 		// WHEN
-		transferController.addTransfer(transferDto, result, model);
+		transferController.addTransfer(transferDto1, result, model);
 
 		// THEN
 		assertEquals("Your balance account is insufficient, the transfer was not effected. You can send a maximum of 100.0 €", transferController.getMessage());
@@ -149,7 +180,7 @@ public class TransferControllerTest {
 		when(transferService.isAccountBalanceSufficient(ArgumentMatchers.any(TransferDto.class), anyDouble())).thenThrow(Exception.class);
 
 		// WHEN
-		transferController.addTransfer(transferDto, result, model);
+		transferController.addTransfer(transferDto1, result, model);
 
 		// THEN
 		assertEquals("Unknown error, the transfer was not effected", transferController.getMessage());

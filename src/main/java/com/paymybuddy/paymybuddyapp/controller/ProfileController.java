@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,22 @@ public class ProfileController {
 		this.userService = userService;
 	}
 
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
+
 	@GetMapping("/user/profile")
 	public String profile(Model model) {
+
 		User user = getLoggedUser();
+
+		if (user == null) {
+			message = "Logged user not found";
+			return "redirect:/user/profile?error";
+		}
+
 		model.addAttribute("firstname", user.getFirstname());
 		model.addAttribute("lastname", user.getLastname());
 		model.addAttribute("email", user.getEmail());
@@ -73,9 +87,15 @@ public class ProfileController {
 		userService.updateUser(userDto);
 		return "redirect:/profile";
 	}
+
 	private User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
+	}
+
+/*	private User getLoggedUser() {
 		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		return loggedUser;
-	}
+	}*/
 
 }

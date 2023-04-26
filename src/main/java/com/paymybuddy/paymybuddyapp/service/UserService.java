@@ -17,13 +17,13 @@ public interface UserService {
 
 	String findUserEmailById(Integer id);
 
-	List<UserDto> findAllUsers();
+/*	List<UserDto> findAllUsers();*/
 
     void addContact(User friend);
 
     void addTransfer(TransferDto transferDto) throws Exception;
 
-	boolean isFriendAlreadyInList(User loggedUser, String email);
+	boolean isFriendAlreadyInList(String email);
 
 	void addMoney(double amount) throws Exception;
 

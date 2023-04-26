@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -60,9 +62,27 @@ public class HomeControllerTest {
 
 		// WHEN
 		homeController.home(model);
+		String expected = homeController.home(model);
 
 		// THEN
-		assertEquals("", homeController.getMessage());
+		assertEquals(null, homeController.getMessage());
+		assertEquals("home", expected);
+
+	}
+
+	@Test
+	void getHome_LoggedUserNull_Test() {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(null);
+
+		// WHEN
+		homeController.home(model);
+		String expected = homeController.home(model);
+
+		// THEN
+		assertEquals("Logged user not found, the transfer was not effected", homeController.getMessage());
+		assertEquals("redirect:/user/transfer?error", expected);
 
 	}
 

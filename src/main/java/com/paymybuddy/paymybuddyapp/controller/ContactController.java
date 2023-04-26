@@ -5,7 +5,9 @@ import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
 import com.paymybuddy.paymybuddyapp.service.ContactService;
+import com.paymybuddy.paymybuddyapp.service.ContactServiceImpl;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,9 +72,15 @@ public class ContactController {
 	}
 
 	private User getLoggedUser() {
+		// TODO reporter cette méthode dans les autres contrôleurs
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
+	}
+
+/*	private User getLoggedUser() {
 		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		return loggedUser;
-	}
+	}*/
 
 
 /*	@PostMapping("/user/contact/save")

@@ -7,7 +7,7 @@ import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImplement implements UserService {
+public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
 	private TransferRepository transferRepository;
-
 	private PasswordEncoder passwordEncoder;
 
-	public UserServiceImplement(UserRepository userRepository, TransferRepository transferRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository userRepository, TransferRepository transferRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.transferRepository = transferRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -61,13 +60,13 @@ public class UserServiceImplement implements UserService {
 		return userRepository.findById(id).get().getEmail();
 	}
 
-	@Override
+/*	@Override
 	public List<UserDto> findAllUsers() {
 		List<User> users = userRepository.findAll();
 		return users.stream()
 				.map((user) -> mapToUserDto(user))
 				.collect(Collectors.toList());
-	}
+	}*/
 
 	@Override
 	public void addContact(User friend) {
@@ -132,7 +131,9 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public boolean isFriendAlreadyInList(User loggedUser, String friendEmail) {
+	public boolean isFriendAlreadyInList (String friendEmail) {
+
+		User loggedUser = getLoggedUser();
 
 		List<User> contacts = loggedUser.getContacts();
 		for (User u : contacts) {
@@ -179,7 +180,11 @@ public class UserServiceImplement implements UserService {
 	}
 
 	private User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return this.findUserByEmail(authentication == null ? "" : authentication.getName());
+	}
+/*	private User getLoggedUser() {
 		User loggedUser = findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		return loggedUser;
-	}
+	}*/
 }

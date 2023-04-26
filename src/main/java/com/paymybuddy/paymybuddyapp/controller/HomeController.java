@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -33,10 +34,15 @@ public class HomeController {
 	@GetMapping("/user/home")
 	public String home(Model model) {
 
-		User user = getLoggedUser();
+		User loggedUser = getLoggedUser();
 
-		model.addAttribute("firstname", user.getFirstname());
-		model.addAttribute("accountBalance", (Double.toString(user.getAccountBalance()) + " €"));
+		if (loggedUser == null) {
+			message = "Logged user not found, the transfer was not effected";
+			return "redirect:/user/transfer?error";
+		}
+
+		model.addAttribute("firstname", loggedUser.getFirstname());
+		model.addAttribute("accountBalance", (Double.toString(loggedUser.getAccountBalance()) + " €"));
 		model.addAttribute("message", message);
 
 		return "home";
@@ -82,8 +88,14 @@ public class HomeController {
 	}
 
 	private User getLoggedUser() {
+		// TODO reporter cette méthode dans les autres contrôleurs
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
+	}
+
+/*	private User getLoggedUser() {
 		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		return loggedUser;
-	}
+	}*/
 
 }
