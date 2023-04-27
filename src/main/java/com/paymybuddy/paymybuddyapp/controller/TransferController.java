@@ -2,6 +2,7 @@ package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class TransferController {
@@ -23,17 +23,15 @@ public class TransferController {
 	private UserService userService;
 
 	private TransferService transferService;
+	private String message;
+
+	public TransferController(UserService userService, TransferService transferService) {
+		this.userService = userService;
+		this.transferService = transferService;
+	}
 
 	public String getMessage() {
 		return message;
-	}
-
-	private String message;
-
-
-	public TransferController(UserService userService, TransferService transferService){
-		this.userService = userService;
-		this.transferService = transferService;
 	}
 
 	@GetMapping("/user/transfer")
@@ -51,11 +49,6 @@ public class TransferController {
 
 		List<TransferDto> transfersDone = transferService.findAllUsersTransfers(loggedUser);
 
-/*		List<Transfer> transfersDone = getLoggedUser().getTransfers_done();
-		System.out.print("liste transferts : ");
-		getLoggedUser().printTransfersDone();
-		// Plutôt chercher avec findAllTranserts*/
-
 		model.addAttribute("transfersDone", transfersDone);
 
 		List<User> connections = getLoggedUser().getContacts();
@@ -63,7 +56,7 @@ public class TransferController {
 
 		model.addAttribute("message", message);
 
-	return "transfer";
+		return "transfer";
 	}
 
 	@PostMapping("/user/transfer/pay")
@@ -78,7 +71,7 @@ public class TransferController {
 			return "redirect:/user/transfer?error";
 		}
 
-		try{
+		try {
 
 			Integer idLoggedUser = loggedUser.getId();
 			transferDto.setDebtor(idLoggedUser);
@@ -90,14 +83,16 @@ public class TransferController {
 			transferService.saveTransfer(transferDto);
 			userService.addTransfer(transferDto);
 
-			message = "The transfer was successfully done ! You have now "  + loggedUser.getAccountBalance()+  " € on your account";
+			message = "The transfer was successfully done ! You have now " + loggedUser.getAccountBalance() + " € on your account";
 
 			return "redirect:/user/transfer?success";
 
-		} catch (Exception exception){
+		} catch (Exception exception) {
 
-			if(exception instanceof InsufficientBalanceException) {
-				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance()/1.05 + " €";
+			if (exception instanceof InsufficientBalanceException) {
+				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance() / 1.05 + " €";
+			} else if (exception instanceof AmountZeroException) {
+				message = "Amount equals zero, the transfer was not effected";
 			} else {
 				message = "Unknown error, the transfer was not effected";
 			}
@@ -107,7 +102,6 @@ public class TransferController {
 	}
 
 	private User getLoggedUser() {
-		// TODO reporter cette méthode dans les autres contrôleurs
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}

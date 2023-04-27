@@ -170,21 +170,18 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
-	private UserDto mapToUserDto(User user) {
+/*	private UserDto mapToUserDto(User user) {
 		UserDto userDto = new UserDto();
 		userDto.setFirstname(user.getFirstname());
 		userDto.setLastname(user.getLastname());
 		userDto.setEmail(user.getEmail());
 		userDto.setAccountBalance(user.getAccountBalance());
 		return userDto;
-	}
+	}*/
 
 	private User getLoggedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return this.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
-/*	private User getLoggedUser() {
-		User loggedUser = findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return loggedUser;
-	}*/
+
 }

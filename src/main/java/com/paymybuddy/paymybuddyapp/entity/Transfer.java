@@ -98,11 +98,4 @@ public class Transfer {
         this.debtor = debtor;
     }
 
-/*    public String getCreditorEmail() {
-        return creditorEmail;
-    }
-
-    public void setCreditorEmail(String creditorEmail) {
-        this.creditorEmail = creditorEmail;
-    }*/
 }

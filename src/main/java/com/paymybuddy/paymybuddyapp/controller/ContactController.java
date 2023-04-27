@@ -27,13 +27,13 @@ public class ContactController {
 
 	private String message;
 
-	public String getMessage() {
-		return message;
-	}
-
-	public ContactController(UserService userService, ContactService contactService){
+	public ContactController(UserService userService, ContactService contactService) {
 		this.userService = userService;
 		this.contactService = contactService;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 
 	@GetMapping("/user/contact")
@@ -52,15 +52,17 @@ public class ContactController {
 	                         Model model) {
 
 		try {
+
 			contactService.isContactValid(email);
 			User friend = userService.findUserByEmail(email);
 			userService.addContact(friend);
 			message = "Your friend was successfully added !";
 			return "redirect:/user/contact?success";
+
 		} catch (Exception exception) {
-			if(exception instanceof LoggedUserException) {
+			if (exception instanceof LoggedUserException) {
 				message = "You can't add yourself to your list of contacts";
-			} else if (exception instanceof ContactNotFoundException){
+			} else if (exception instanceof ContactNotFoundException) {
 				message = "This contact was not found";
 			} else if (exception instanceof ContactAlreadyExistsException) {
 				message = "This contact is already in your list";
@@ -72,66 +74,9 @@ public class ContactController {
 	}
 
 	private User getLoggedUser() {
-		// TODO reporter cette méthode dans les autres contrôleurs
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
-
-/*	private User getLoggedUser() {
-		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return loggedUser;
-	}*/
-
-
-/*	@PostMapping("/user/contact/save")
-	public String addContact(@ModelAttribute("email") String email,
-	                         BindingResult result,
-	                         Model model) {
-
-		User friend = userService.findUserByEmail(email);
-
-		// Si friend not null = contact trouvé et que différent du loggeduser
-		if(!Objects.isNull(friend) && !getLoggedUser().getEmail().equals(email)) {
-			userService.addContact(friend);
-		}
-
-*//*		if (Objects.isNull(friend)){
-			result.rejectValue("email", null, "This email was not found");
-			System.out.print("Friend is null");
-		}
-
-		if (result.hasErrors()){
-			System.out.print("Result has error");
-			return "contact";
-		}*//*
-
-		return "redirect:/user/contact";
-	}*/
-
-	/*	@PostMapping("/user/contact/save")
-	public String addContact(@ModelAttribute("user") @Valid UserDto userDto,
-	                         BindingResult result,
-	                         Model model) {
-
-		User friend = userService.findUserByEmail(userDto.getEmail());
-
-		// Si friend not null = contact trouvé et que différent du loggeduser
-		if(!Objects.isNull(friend) && !getLoggedUser().getEmail().equals(userDto.getEmail())) {
-			userService.addContact(friend);
-		}
-
-		if (Objects.isNull(friend)){
-			result.rejectValue("email", null, "This email was not found");
-			System.out.print("Friend is null");
-		}
-
-		if (result.hasErrors()){
-			System.out.print("Result has error");
-			return "contact";
-		}
-
-		return "redirect:/user/contact";
-	}*/
 
 
 }

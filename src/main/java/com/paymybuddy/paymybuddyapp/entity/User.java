@@ -138,19 +138,4 @@ public class User {
 		this.contacts = contacts;
 	}
 
-	public void printContact() {
-		for (User u : this.getContacts()
-		) {
-			System.out.print(u.getEmail());
-		}
-	}
-
-	public void printTransfersDone() {
-		int compteur = 0;
-		for (Transfer t : this.getTransfersDone()) {
-			System.out.println(compteur + ") amount : " + t.getAmount() + " reason : " + t.getReason() + " - ");
-			compteur++;
-		}
-	}
-
 }

@@ -17,8 +17,6 @@ public interface UserService {
 
 	String findUserEmailById(Integer id);
 
-/*	List<UserDto> findAllUsers();*/
-
     void addContact(User friend);
 
     void addTransfer(TransferDto transferDto) throws Exception;

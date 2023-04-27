@@ -3,6 +3,7 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,11 @@ public class TransferServiceImpl implements TransferService {
 	}
 
 	@Override
-	public void saveTransfer(TransferDto transferDto) {
+	public void saveTransfer(TransferDto transferDto) throws AmountZeroException {
+
+		if(transferDto.getAmount() == 0) {
+			throw new AmountZeroException();
+		}
 		Transfer transfer = new Transfer();
 		transfer.setDate(transferDto.getDate());
 		transfer.setAmount(transferDto.getAmount());
@@ -35,15 +40,6 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setDate(LocalDate.now());
 		transferRepository.save(transfer);
 	}
-
-/*	@Override
-	public List<TransferDto> findAllUsersTransfers(String email) {
-		List<Transfer> transfers = transferRepository.findAll();
-		return transfers.stream()
-				.map((transfer) -> mapToTransferDto(transfer))
-				.collect(Collectors.toList());
-		// TODO
-	}*/
 
 	@Override
 	public List<TransferDto> findAllUsersTransfers(User user) {

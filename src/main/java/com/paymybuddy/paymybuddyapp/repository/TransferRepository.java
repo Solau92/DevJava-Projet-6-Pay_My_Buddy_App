@@ -7,11 +7,8 @@ import java.util.List;
 
 public interface TransferRepository extends JpaRepository<Transfer, Integer> {
 
-    Transfer findByDebtor(String email);
+/*    Transfer findByDebtor(String email);
 
-    Transfer findByCreditor(String email);
-
-    // TODO
-//    List<Transfer> findTransferByUserId(Integer id);
+    Transfer findByCreditor(String email);*/
 
 }

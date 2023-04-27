@@ -1,8 +1,5 @@
 package com.paymybuddy.paymybuddyapp.dto;
 
-import com.paymybuddy.paymybuddyapp.entity.Transfer;
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
 
 public class TransferDto {
@@ -30,8 +27,6 @@ public class TransferDto {
 	private Integer creditor;
 
 	private String creditorEmail;
-
-
 
 	private Integer debtor;
 

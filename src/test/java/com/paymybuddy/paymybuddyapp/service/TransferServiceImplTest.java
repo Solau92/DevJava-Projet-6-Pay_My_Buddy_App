@@ -3,6 +3,7 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,7 +92,7 @@ public class TransferServiceImplTest {
 	}
 
 	@Test
-	void saveTransfer_Ok_Test(){
+	void saveTransfer_Ok_Test() throws AmountZeroException {
 
 		// GIVEN
 		when(transferRepository.save(transfer1)).thenReturn(transfer1);

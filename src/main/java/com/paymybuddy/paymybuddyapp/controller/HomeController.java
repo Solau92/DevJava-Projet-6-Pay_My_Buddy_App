@@ -14,18 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Locale;
-
 @Controller
 public class HomeController {
 
 	private UserService userService;
 
+	private String message;
+
 	public String getMessage() {
 		return message;
 	}
-
-	private String message;
 
 	public HomeController(UserService userService) {
 		this.userService = userService;
@@ -66,7 +64,6 @@ public class HomeController {
 			}
 			return "redirect:/user/home?errorAdd";
 		}
-
 	}
 
 	@PostMapping ("user/home/withdrawmoney")
@@ -88,14 +85,8 @@ public class HomeController {
 	}
 
 	private User getLoggedUser() {
-		// TODO reporter cette méthode dans les autres contrôleurs
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
-
-/*	private User getLoggedUser() {
-		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return loggedUser;
-	}*/
 
 }

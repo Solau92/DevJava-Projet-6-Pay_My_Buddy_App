@@ -37,9 +37,4 @@ public class ContactServiceImpl implements ContactService {
 		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
 
-/*	private User getLoggedUser() {
-		User loggedUser = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		return loggedUser;
-	}*/
-
 }
