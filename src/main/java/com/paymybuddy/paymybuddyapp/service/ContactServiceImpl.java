@@ -4,11 +4,13 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class ContactServiceImpl implements ContactService {
 
@@ -22,11 +24,14 @@ public class ContactServiceImpl implements ContactService {
 	public boolean isContactValid(User user, User friend) throws LoggedUserException, ContactNotFoundException, ContactAlreadyExistsException, Exception {
 
 		if(Objects.isNull(friend)) {
+			log.error("ContactNotFoundException");
 			throw new ContactNotFoundException();
 		} else if(friend.getEmail().equals(user.getEmail())) {
+			log.error("LoggedUserException");
 			throw new LoggedUserException();
 		} else if(isFriendAlreadyInList(user, friend)) {
-			throw new ContactAlreadyExistsException();
+			log.error("ContactAlreadyExistsException");
+		throw new ContactAlreadyExistsException();
 		}
 		return true;
 	}
@@ -39,6 +44,7 @@ public class ContactServiceImpl implements ContactService {
 				return true;
 			}
 		}
+		log.error("FriendAlreadyInList");
 		return false;
 	}
 

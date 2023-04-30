@@ -3,7 +3,7 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
@@ -13,8 +13,6 @@ import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -52,6 +50,9 @@ class TransferServiceImplTest {
 	private TransferDto transferDto2 = new TransferDto();
 
 	private TransferDto transferDto3 = new TransferDto();
+
+	private TransferDto transferDto4 = new TransferDto();
+
 
 	private Transfer transfer2 = new Transfer();
 
@@ -107,6 +108,13 @@ class TransferServiceImplTest {
 		transferDto3.setAmount(1000);
 		transferDto3.setDate(LocalDate.now());
 		transferDto3.setCreditorEmail("friendEmailTest@email.com");
+
+		transferDto4.setDebtor(1);
+		transferDto4.setCreditor(2);
+		transferDto4.setReason("becauseAgain");
+		transferDto4.setAmount(-1000);
+		transferDto4.setDate(LocalDate.now());
+		transferDto4.setCreditorEmail("friendEmailTest@email.com");
 	}
 
 	@Test
@@ -115,18 +123,15 @@ class TransferServiceImplTest {
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friendUser);
 		when(transferRepository.save(any(Transfer.class))).thenReturn(transfer1);
-//		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
-//		when(userRepository.save(any(User.class))).thenReturn(friendUser);
+
 
 		// WHEN
-		transferService.saveTransfer(loggedUser, transferDto1);
+		Transfer savedTransfer = transferService.saveTransfer(loggedUser, transferDto1);
 
 		// THEN
-		verify(transferRepository, Mockito.times(1)).save(transferCaptor.capture());
+		verify(transferRepository, Mockito.times(1)).save(any(Transfer.class));
 		verify(userService, Mockito.times(1)).addTransfer(transferDtoCaptor.capture());
-//		verify(userRepository, Mockito.times(2)).save(any(User.class));
-		Transfer transferSaved = transferCaptor.getValue();
-		assertEquals(100, transferSaved.getAmount());
+		assertEquals(transfer1.getAmount(), savedTransfer.getAmount());
 		TransferDto transferDtoSaved = transferDtoCaptor.getValue();
 		assertEquals(100, transferDtoSaved.getAmount());
 	}
@@ -144,14 +149,27 @@ class TransferServiceImplTest {
 
 
 	@Test
-	void saveTransfer_AmountZero_Test() throws AmountZeroException {
+	void saveTransfer_AmountZero_Test() throws IncorrectAmountException {
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
 
 		// WHEN
 		// THEN
-		assertThrows(AmountZeroException.class, ()-> transferService.saveTransfer(loggedUser, transferDto2));
+		assertThrows(IncorrectAmountException.class, ()-> transferService.saveTransfer(loggedUser, transferDto2));
+
+	}
+
+	@Test
+	void saveTransfer_AmountNegative_Test() throws IncorrectAmountException {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+
+		// WHEN
+		// THEN
+		assertThrows(IncorrectAmountException.class, ()-> transferService.saveTransfer(loggedUser, transferDto4));
+
 	}
 
 	@Test

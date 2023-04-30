@@ -3,16 +3,18 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TransferServiceImpl implements TransferService {
 
@@ -28,11 +30,11 @@ public class TransferServiceImpl implements TransferService {
 	/**
 	 * Saves the transfer in database if the transfer attributes are valid.
 	 * @param transferDto
-	 * @throws AmountZeroException
+	 * @throws IncorrectAmountException
 	 */
 	@Transactional
 	@Override
-	public void saveTransfer(User loggedUser, TransferDto transferDto) throws InsufficientBalanceException, Exception {
+	public Transfer saveTransfer(User loggedUser, TransferDto transferDto) throws InsufficientBalanceException, Exception {
 
 		Integer idLoggedUser = loggedUser.getId();
 		transferDto.setDebtor(idLoggedUser);
@@ -41,8 +43,14 @@ public class TransferServiceImpl implements TransferService {
 
 		isAccountBalanceSufficient(transferDto, loggedUser.getAccountBalance());
 
-		if(transferDto.getAmount() == 0) {
-			throw new AmountZeroException();
+		if(transferDto.getAmount() <= 0) {
+
+			if(transferDto.getAmount() == 0) {
+				log.error("IncorrectAmountException : equals zero");
+				throw new IncorrectAmountException("Amount equals zero");
+			}
+			log.error("IncorrectAmountException : negative amount");
+			throw new IncorrectAmountException("Amount cannot be negative");
 		}
 		Transfer transfer = new Transfer();
 		transfer.setDate(transferDto.getDate());
@@ -53,8 +61,8 @@ public class TransferServiceImpl implements TransferService {
 		transfer.setReason(transferDto.getReason());
 		transfer.setDate(LocalDate.now());
 
-		transferRepository.save(transfer);
 		userService.addTransfer(transferDto);
+		return transferRepository.save(transfer);
 	}
 
 	/**
@@ -82,7 +90,7 @@ public class TransferServiceImpl implements TransferService {
 		return transfersDto;
 	}
 
-	/** TODO : repasser en privé
+	/**
 	 * Returns true if the account balance is sufficient to make the transfer, throws an Exception if not
 	 * @param transferDto
 	 * @param accountBalance
@@ -92,6 +100,7 @@ public class TransferServiceImpl implements TransferService {
 	private boolean isAccountBalanceSufficient(TransferDto transferDto, double accountBalance) throws InsufficientBalanceException {
 
 		if(transferDto.getAmount()*1.05 > accountBalance) {
+			log.error("InsufficientBalanceException");
 			throw new InsufficientBalanceException();
 		}
 			return true;

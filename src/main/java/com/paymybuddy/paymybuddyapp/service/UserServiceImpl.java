@@ -4,8 +4,8 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.*;
-import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,25 +30,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void saveUser(UserDto userDto) {
+	public User saveUser(UserDto userDto) {
 		User user = new User();
 		user.setFirstname(userDto.getFirstname());
 		user.setLastname(userDto.getLastname());
 		user.setEmail(userDto.getEmail());
 		user.setAccountBalance(userDto.getAccountBalance());
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		userRepository.save(user);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public void updateUser(UserDto userDto) {
+	public User updateUser(UserDto userDto) {
 		User user = findUserByEmail(userDto.getEmail());
 		user.setFirstname(userDto.getFirstname());
 		user.setLastname(userDto.getLastname());
 		user.setEmail(userDto.getEmail());
 		user.setAccountBalance(userDto.getAccountBalance());
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		userRepository.save(user);
+		return userRepository.save(user);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
 	public void addMoney(double amount) throws Exception {
 
 		if(amount == 0) {
-			throw new AmountZeroException();
+			throw new IncorrectAmountException("Amount equals zero");
 		}
 		User user = getLoggedUser();
 		double accountModUser = user.getAccountBalance() + amount;
@@ -107,6 +108,7 @@ public class UserServiceImpl implements UserService {
 		User user = getLoggedUser();
 
 		if(amountWithdrawn > user.getAccountBalance()) {
+			log.error("InsufficientBalanceException");
 			throw new InsufficientBalanceException();
 		}
 

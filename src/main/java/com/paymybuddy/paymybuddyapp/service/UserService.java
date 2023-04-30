@@ -7,16 +7,16 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 public interface UserService {
 
 	/**
-	 *
 	 * @param userDto
+	 * @return
 	 */
-	void saveUser(UserDto userDto);
+	User saveUser(UserDto userDto);
 
 	/**
-	 *
 	 * @param userDto
+	 * @return
 	 */
-	void updateUser(UserDto userDto);
+	User updateUser(UserDto userDto);
 
 	/**
 	 *

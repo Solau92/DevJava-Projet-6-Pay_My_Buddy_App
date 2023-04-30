@@ -1,9 +1,9 @@
 package com.paymybuddy.paymybuddyapp.service;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
+import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
-import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -13,10 +13,10 @@ public interface TransferService {
 	/**
 	 * Saves the transfer in database if the transfer attributes are valid.
 	 * @param transferDto
-	 * @throws AmountZeroException
+	 * @throws IncorrectAmountException
 	 */
 	@Transactional
-	void saveTransfer(User loggedUser, TransferDto transferDto) throws Exception;
+	Transfer saveTransfer(User loggedUser, TransferDto transferDto) throws Exception;
 
 	/**
 	 * Returns the list of TransferDto done by the User given in parameter.

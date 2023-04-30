@@ -127,7 +127,7 @@ class TransferControllerTest {
 
 		// THEN
 		assertEquals("redirect:/user/transfer?error", expected);
-		assertEquals("Logged user not found, the transfer was not effected", transferController.getMessage());
+		assertEquals("Logged user not found", transferController.getMessage());
 	}
 
 	@Test

@@ -1,22 +1,18 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import com.paymybuddy.paymybuddyapp.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -81,7 +77,7 @@ class HomeControllerTest {
 		String expected = homeController.home(model);
 
 		// THEN
-		assertEquals("Logged user not found, the transfer was not effected", homeController.getMessage());
+		assertEquals("Logged user not found", homeController.getMessage());
 		assertEquals("redirect:/user/transfer?error", expected);
 
 	}
@@ -105,7 +101,7 @@ class HomeControllerTest {
 	void addMoney_AmountZeroException_Test() throws Exception {
 
 		// GIVEN
-		doThrow(AmountZeroException.class).when(userService).addMoney(anyDouble());
+		doThrow(IncorrectAmountException.class).when(userService).addMoney(anyDouble());
 
 		// WHEN
 		homeController.addMoney(0, result, model);

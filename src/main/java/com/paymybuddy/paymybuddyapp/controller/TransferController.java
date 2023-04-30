@@ -2,7 +2,7 @@ package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
@@ -88,7 +88,7 @@ public class TransferController {
 
 			if (exception instanceof InsufficientBalanceException) {
 				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance() / 1.05 + " €";
-			} else if (exception instanceof AmountZeroException) {
+			} else if (exception instanceof IncorrectAmountException) {
 				message = "Amount equals zero, the transfer was not effected";
 			} else {
 				message = "Unknown error, the transfer was not effected";

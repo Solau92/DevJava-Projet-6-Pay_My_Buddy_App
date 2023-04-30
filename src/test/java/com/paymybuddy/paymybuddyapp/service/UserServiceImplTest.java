@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,11 +104,12 @@ class UserServiceImplTest {
 		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
-		userService.saveUser(userDto);
+		User userSaved = userService.saveUser(userDto);
 
 		// THEN
-		verify(userRepository, Mockito.times(1)).save(userCaptor.capture());
-		User userSaved = userCaptor.getValue();
+		verify(userRepository, Mockito.times(1)).save(any(User.class));
+		assertEquals(loggedUser.getFirstname(), userSaved.getFirstname());
+		assertEquals(loggedUser.getAccountBalance(), userSaved.getAccountBalance());
 	}
 
 
@@ -122,11 +122,12 @@ class UserServiceImplTest {
 		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
-		userService.updateUser(userDto);
+		User userUpdated = userService.updateUser(userDto);
 
 		// THEN
-		verify(userRepository, Mockito.times(1)).save(userCaptor.capture());
-		User userSaved = userCaptor.getValue();
+		verify(userRepository, Mockito.times(1)).save(any(User.class));
+		assertEquals(loggedUser.getFirstname(), userUpdated.getFirstname());
+		assertEquals(loggedUser.getAccountBalance(), userUpdated.getAccountBalance());
 	}
 
 	@Test
@@ -217,7 +218,7 @@ class UserServiceImplTest {
 
 		// WHEN
 		// THEN
-	assertThrows(AmountZeroException.class, ()->userService.addMoney(0));
+		assertThrows(IncorrectAmountException.class, ()->userService.addMoney(0));
 
 	}
 

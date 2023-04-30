@@ -1,13 +1,10 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,7 +60,7 @@ public class HomeController {
 			return "redirect:/user/home?successAdd";
 
 		} catch (Exception exception) {
-			if(exception instanceof AmountZeroException) {
+			if(exception instanceof IncorrectAmountException) {
 				this.message = "Error, the amount cannot be equal to 0 €";
 			} else {
 				this.message = "Error";
