@@ -1,5 +1,6 @@
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
+import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,16 +14,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HomeControllerIntegrationTest {
+class HomeControllerIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
+	@Autowired
+	UserRepository userRepository;
+
 	@Test
 	void getHomeTest() throws IOException {
+
 /*		mockMvc.perform(get("/user/home"))
 				.andExpect(status().isAccepted())
 				.andExpect();*/
+
+/*		userRepository.findByEmail("toto@toto.fr");
+		assert*/
 
 	}
 

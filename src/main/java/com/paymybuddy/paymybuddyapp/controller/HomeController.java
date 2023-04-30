@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Slf4j
 @Controller
 public class HomeController {
 
@@ -32,16 +34,19 @@ public class HomeController {
 	@GetMapping("/user/home")
 	public String home(Model model) {
 
-		User loggedUser = getLoggedUser();
+		User loggedUser = userService.getLoggedUser();
 
 		if (loggedUser == null) {
-			message = "Logged user not found, the transfer was not effected";
+			message = "Logged user not found";
+			log.info("Home error page");
 			return "redirect:/user/transfer?error";
 		}
 
 		model.addAttribute("firstname", loggedUser.getFirstname());
 		model.addAttribute("accountBalance", (Double.toString(loggedUser.getAccountBalance()) + " €"));
 		model.addAttribute("message", message);
+
+		log.info("Home page");
 
 		return "home";
 	}
@@ -54,6 +59,7 @@ public class HomeController {
 		try{
 			userService.addMoney(amount);
 			this.message = "Money was successfully added to your account";
+			log.info("Home add money success page");
 			return "redirect:/user/home?successAdd";
 
 		} catch (Exception exception) {
@@ -62,6 +68,7 @@ public class HomeController {
 			} else {
 				this.message = "Error";
 			}
+			log.info("Home add money error page");
 			return "redirect:/user/home?errorAdd";
 		}
 	}
@@ -72,6 +79,7 @@ public class HomeController {
 		try {
 			userService.withdrawMoney(amountWithdrawn);
 			message = "Money was sent to your bank account";
+			log.info("Home success withdraw page");
 			return "redirect:/user/home?successWithdraw";
 
 		} catch (Exception exception){
@@ -80,13 +88,9 @@ public class HomeController {
 			} else {
 				message = "Error";
 			}
+			log.info("Home error withdraw page");
 			return "redirect:/user/home?errorWithdraw";
 		}
-	}
-
-	private User getLoggedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
 
 }

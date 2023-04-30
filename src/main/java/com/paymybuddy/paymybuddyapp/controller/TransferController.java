@@ -6,8 +6,7 @@ import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class TransferController {
 
@@ -40,10 +40,11 @@ public class TransferController {
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
 
-		User loggedUser = getLoggedUser();
+		User loggedUser = userService.getLoggedUser();
 
 		if (loggedUser == null) {
-			message = "Logged user not found, the transfer was not effected";
+			message = "Logged user not found";
+			log.info("Transfer error page");
 			return "redirect:/user/transfer?error";
 		}
 
@@ -51,10 +52,12 @@ public class TransferController {
 
 		model.addAttribute("transfersDone", transfersDone);
 
-		List<User> connections = getLoggedUser().getContacts();
+		List<User> connections = userService.getLoggedUser().getContacts();
 		model.addAttribute("connections", connections);
 
 		model.addAttribute("message", message);
+
+		log.info("Transfer page");
 
 		return "transfer";
 	}
@@ -64,26 +67,20 @@ public class TransferController {
 	                          BindingResult result,
 	                          Model model) {
 
-		User loggedUser = getLoggedUser();
+		User loggedUser = userService.getLoggedUser();
 
 		if (loggedUser == null) {
 			message = "Logged user not found, the transfer was not effected";
+			log.info("Transfer error page");
 			return "redirect:/user/transfer?error";
 		}
 
 		try {
-
-			Integer idLoggedUser = loggedUser.getId();
-			transferDto.setDebtor(idLoggedUser);
-
-			transferDto.setCreditor(userService.findUserByEmail(transferDto.getCreditorEmail()).getId());
-
-			transferService.isAccountBalanceSufficient(transferDto, loggedUser.getAccountBalance());
-
-			transferService.saveTransfer(transferDto);
-			userService.addTransfer(transferDto);
+			transferService.saveTransfer(loggedUser, transferDto);
 
 			message = "The transfer was successfully done ! You have now " + loggedUser.getAccountBalance() + " € on your account";
+
+			log.info("Transfer success page");
 
 			return "redirect:/user/transfer?success";
 
@@ -96,14 +93,10 @@ public class TransferController {
 			} else {
 				message = "Unknown error, the transfer was not effected";
 			}
+			log.info("Transfer error page");
 
 			return "redirect:/user/transfer?error";
 		}
-	}
-
-	private User getLoggedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}
 
 }

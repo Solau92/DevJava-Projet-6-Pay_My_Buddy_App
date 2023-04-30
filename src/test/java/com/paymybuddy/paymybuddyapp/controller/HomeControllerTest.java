@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class HomeControllerTest {
+class HomeControllerTest {
 
 	@InjectMocks
 	private HomeController homeController;
@@ -58,7 +58,7 @@ public class HomeControllerTest {
 	void getHome_Ok_Test() {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
 
 		// WHEN
 		homeController.home(model);
@@ -168,19 +168,6 @@ public class HomeControllerTest {
 
 		// THEN
 		assertEquals("Error", homeController.getMessage());
-
-	}
-
-	@Test
-	void getLoggedUser_Ok_Test(){
-
-		// GIVEN
-
-		// WHEN
-
-		// THEN
-
-		fail("Not yet implemented");
 
 	}
 

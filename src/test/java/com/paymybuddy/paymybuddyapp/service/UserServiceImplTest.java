@@ -4,29 +4,32 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
-import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.*;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserServiceImplTest {
+class UserServiceImplTest {
 
 	@InjectMocks
 	private UserServiceImpl userService;
+
+	@Mock
+	private ContactService contactService;
 
 	@Mock
 	private UserRepository userRepository;
@@ -36,6 +39,12 @@ public class UserServiceImplTest {
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
+
+	@Captor
+	ArgumentCaptor<User> userCaptor;
+
+	@Captor
+	ArgumentCaptor<UserDto> userDtoCaptor;
 
 	private User loggedUser = new User();
 	private UserDto userDto = new UserDto();
@@ -99,8 +108,8 @@ public class UserServiceImplTest {
 		userService.saveUser(userDto);
 
 		// THEN
-		// Problème pour tester car ma méthode saveUser ne renvoie rien...
-		fail("not yet implemented");
+		verify(userRepository, Mockito.times(1)).save(userCaptor.capture());
+		User userSaved = userCaptor.getValue();
 	}
 
 
@@ -108,12 +117,16 @@ public class UserServiceImplTest {
 	void updateUser_Ok_Test(){
 
 		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(passwordEncoder.encode(anyString())).thenReturn(encodedPassword);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
+		userService.updateUser(userDto);
 
 		// THEN
-
-		fail("not yet implemented");
+		verify(userRepository, Mockito.times(1)).save(userCaptor.capture());
+		User userSaved = userCaptor.getValue();
 	}
 
 	@Test
@@ -148,17 +161,20 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	void addContact_Ok_Test(){
+	void addContact_Ok_Test() throws Exception {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-		when(userRepository.save(any(User.class))).thenReturn(friend);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
+		when(userService.findUserByEmail(anyString())).thenReturn(friend);
+		when(contactService.isContactValid(any(User.class), any(User.class))).thenReturn(true);
+		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
-		userService.addContact(friend);
+		userService.addContact(friend.getEmail());
 
 		// THEN
-		assertEquals(friend, loggedUser.getContacts().get(0));
+		verify(userRepository, Mockito.times(1)).save(userCaptor.capture());
+		User friendAdded = userCaptor.getValue().getContacts().get(0);
 	}
 
 	@Test
@@ -176,35 +192,7 @@ public class UserServiceImplTest {
 		assertEquals(310.0, friend.getAccountBalance());
 	}
 
-	@Test
-	void isFriendAlreadyInList_Yes_Test(){
 
-/*		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-		when().thenReturn(true);
-
-		// WHEN
-		Boolean result = userService.isFriendAlreadyInList(friend.getEmail());
-
-		// THEN
-		assertTrue(result);*/
-
-		fail("not yet implemented");
-	}
-
-	@Test
-	void isFriendAlreadyInList_No_Test(){
-
-		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-
-		// WHEN
-		Boolean result = userService.isFriendAlreadyInList(friend.getEmail());
-
-		// THEN
-		assertFalse(result);
-
-	}
 
 	@Test
 	void addMoney_Ok_Test() throws Exception {

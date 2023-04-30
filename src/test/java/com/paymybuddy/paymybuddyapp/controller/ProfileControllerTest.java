@@ -15,7 +15,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ProfileControllerTest {
+class ProfileControllerTest {
 
 	@InjectMocks
 	private ProfileController profileController;
@@ -42,7 +42,7 @@ public class ProfileControllerTest {
 	void getProfile_Ok_Test(){
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
 
 		// WHEN
 		profileController.profile(model);

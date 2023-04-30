@@ -5,10 +5,8 @@ import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
 import com.paymybuddy.paymybuddyapp.service.ContactService;
-import com.paymybuddy.paymybuddyapp.service.ContactServiceImpl;
 import com.paymybuddy.paymybuddyapp.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,18 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class ContactController {
 
 	private UserService userService;
 
-	private ContactService contactService;
-
 	private String message;
 
-	public ContactController(UserService userService, ContactService contactService) {
+	public ContactController(UserService userService) {
 		this.userService = userService;
-		this.contactService = contactService;
 	}
 
 	public String getMessage() {
@@ -40,9 +36,10 @@ public class ContactController {
 	public String contact(Model model) {
 		String friendEmail = "";
 		model.addAttribute("email", friendEmail);
-		List<User> contacts = getLoggedUser().getContacts();
+		List<User> contacts = userService.getLoggedUser().getContacts();
 		model.addAttribute("contacts", contacts);
 		model.addAttribute("message", message);
+		log.info("Contact page");
 		return "contact";
 	}
 
@@ -52,11 +49,9 @@ public class ContactController {
 	                         Model model) {
 
 		try {
-
-			contactService.isContactValid(email);
-			User friend = userService.findUserByEmail(email);
-			userService.addContact(friend);
+			userService.addContact(email);
 			message = "Your friend was successfully added !";
+			log.info("Contact success page");
 			return "redirect:/user/contact?success";
 
 		} catch (Exception exception) {
@@ -69,14 +64,9 @@ public class ContactController {
 			} else {
 				message = "Error, try again";
 			}
+			log.info("Contact error page");
 			return "redirect:/user/contact?error";
 		}
 	}
-
-	private User getLoggedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
-	}
-
 
 }

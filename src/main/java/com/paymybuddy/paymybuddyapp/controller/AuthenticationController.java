@@ -7,6 +7,7 @@ import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.TransferServiceImpl;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,20 +19,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class AuthenticationController {
 
 	private UserService userService;
 
-	private TransferService transferService;
-
-	public AuthenticationController(UserService userService, TransferService transferService) {
+	public AuthenticationController(UserService userService) {
 		this.userService = userService;
-		this.transferService = transferService;
 	}
 
 	@GetMapping("/index")
 	public String index() {
+		log.info("Index page");
 		return "index";
 	}
 
@@ -39,6 +39,7 @@ public class AuthenticationController {
 	public String showRegistrationForm(Model model) {
 		UserDto user = new UserDto();
 		model.addAttribute("user", user);
+		log.info("Register page");
 		return "register";
 	}
 
@@ -47,20 +48,25 @@ public class AuthenticationController {
 
 		if (userService.findUserByEmail(userDto.getEmail()) != null) {
 			result.rejectValue("email", null, "There is already an account registered with this email");
+			log.info("Register page with error");
 			return "register";
 		}
 
 		userService.saveUser(userDto);
+		log.info("Index success page");
+
 		return "redirect:/index?success";
 	}
 
 	@GetMapping("/login")
 	public String login() {
+		log.info("Login page");
 		return "login";
 	}
 
 	@GetMapping("/logoff")
 	public String logoff() {
+		log.info("Logoff page");
 		return "logoff";
 	}
 

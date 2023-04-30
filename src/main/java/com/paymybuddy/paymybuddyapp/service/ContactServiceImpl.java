@@ -4,10 +4,9 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -20,21 +19,27 @@ public class ContactServiceImpl implements ContactService {
 	}
 
 	@Override
-	public boolean isContactValid(String friendEmail) throws Exception {
+	public boolean isContactValid(User user, User friend) throws LoggedUserException, ContactNotFoundException, ContactAlreadyExistsException, Exception {
 
-		if(friendEmail.equals(getLoggedUser().getEmail())) {
-			throw new LoggedUserException();
-		} else if(Objects.isNull(userService.findUserByEmail(friendEmail))) {
+		if(Objects.isNull(friend)) {
 			throw new ContactNotFoundException();
-		} else if(userService.isFriendAlreadyInList(friendEmail)) {
+		} else if(friend.getEmail().equals(user.getEmail())) {
+			throw new LoggedUserException();
+		} else if(isFriendAlreadyInList(user, friend)) {
 			throw new ContactAlreadyExistsException();
 		}
 		return true;
 	}
 
-	private User getLoggedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userService.findUserByEmail(authentication == null ? "" : authentication.getName());
+	public boolean isFriendAlreadyInList(User loggedUser, User friend) {
+
+		List<User> contacts = loggedUser.getContacts();
+		for (User u : contacts) {
+			if (u.getEmail().equals(friend.getEmail())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

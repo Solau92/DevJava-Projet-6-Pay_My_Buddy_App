@@ -10,13 +10,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ContactServiceImplTest {
+class ContactServicelmplTest {
 
 	@InjectMocks
 	private ContactServiceImpl contactService;
@@ -51,10 +53,9 @@ public class ContactServiceImplTest {
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friend);
-		when(userService.isFriendAlreadyInList(anyString())).thenReturn(false);
 
 		// WHEN
-		Boolean expected = contactService.isContactValid("passwordFriendTest");
+		Boolean expected = contactService.isContactValid(loggedUser, friend);
 
 		// THEN
 		assertTrue(expected);
@@ -64,12 +65,9 @@ public class ContactServiceImplTest {
 	void isContactValid_LoggerUserException_Test() {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(loggedUser);
-
 		// WHEN
 		// THEN
-		assertThrows(LoggedUserException.class, ()-> contactService.isContactValid("emailTest@email.com"));
-
+		assertThrows(LoggedUserException.class, ()-> contactService.isContactValid(loggedUser, loggedUser));
 	}
 
 	@Test
@@ -80,22 +78,18 @@ public class ContactServiceImplTest {
 
 		// WHEN
 		// THEN
-		assertThrows(ContactNotFoundException.class, ()-> contactService.isContactValid("falseEmailFriendTest@email.com"));
-
+		assertThrows(ContactNotFoundException.class, ()-> contactService.isContactValid(loggedUser, null));
 	}
 
 	@Test
 	void isContactValid_ContactAlreadyExistsException_Test() {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friend);
-		when(userService.isFriendAlreadyInList(anyString())).thenReturn(true);
+		loggedUser.getContacts().add(friend);
 
 		// WHEN
 		// THEN
-		assertThrows(ContactAlreadyExistsException.class, ()-> contactService.isContactValid("emailFriendTest@email.com"));
-
+		assertThrows(ContactAlreadyExistsException.class, ()-> contactService.isContactValid(loggedUser, friend));
 	}
-
 
 }

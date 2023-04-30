@@ -18,10 +18,11 @@ import org.springframework.validation.BindingResult;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ContactControllerTest {
+class ContactControllerTest {
 
 	@InjectMocks
 	private ContactController contactController;
@@ -41,7 +42,9 @@ public class ContactControllerTest {
 	@Mock
 	private BindingResult result;
 
-	private static User loggedUser = new User();
+	private User loggedUser = new User();
+
+	private User friend = new User();
 
 	@BeforeEach
 	void setUp(){
@@ -51,13 +54,20 @@ public class ContactControllerTest {
 		loggedUser.setEmail("emailTest@email.com");
 		loggedUser.setPassword("passwordTest");
 		loggedUser.setAccountBalance(100.00);
+
+		friend.setId(2);
+		friend.setFirstname("firstnameFriendTest");
+		friend.setLastname("lastnameFriendTest");
+		friend.setEmail("emailFriendTest@email.com");
+		friend.setPassword("passwordFriendTest");
+		friend.setAccountBalance(210.00);
 	}
 
 	@Test
 	void getContact_Ok_Test() {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
 
 		// WHEN
 		String expected = contactController.contact(model);
@@ -71,8 +81,8 @@ public class ContactControllerTest {
 	void addContact_Ok_Test() throws Exception {
 
 		// GIVEN
-		when(contactService.isContactValid(anyString())).thenReturn(true);
-		when(userRepository.findByEmail(anyString())).thenReturn(loggedUser);
+		when(userRepository.findByEmail(anyString())).thenReturn(loggedUser).thenReturn(friend);
+		when(contactService.isContactValid(any(User.class), any(User.class))).thenReturn(true);
 		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
@@ -87,10 +97,10 @@ public class ContactControllerTest {
 	void addContact_LoggedUserException_Test() throws Exception {
 
 		// GIVEN
-		when(contactService.isContactValid(anyString())).thenThrow(LoggedUserException.class);
+		doThrow(LoggedUserException.class).when(userService).addContact(anyString());
 
 		// WHEN
-		contactController.addContact("email", result, model);
+		contactController.addContact("emailTest@email.com", result, model);
 
 		// THEN
 		assertEquals("You can't add yourself to your list of contacts", contactController.getMessage());
@@ -100,7 +110,7 @@ public class ContactControllerTest {
 	void addContact_ContactNotFoundException_Test() throws Exception {
 
 		// GIVEN
-		when(contactService.isContactValid(anyString())).thenThrow(ContactNotFoundException.class);
+		doThrow(ContactNotFoundException.class).when(userService).addContact(anyString());
 
 		// WHEN
 		contactController.addContact("email", result, model);
@@ -114,10 +124,10 @@ public class ContactControllerTest {
 	void addContact_ContactAlreadyExistsException_Test() throws Exception {
 
 		// GIVEN
-		when(contactService.isContactValid(anyString())).thenThrow(ContactAlreadyExistsException.class);
+		doThrow(ContactAlreadyExistsException.class).when(userService).addContact(anyString());
 
 		// WHEN
-		contactController.addContact("email", result, model);
+		contactController.addContact("emailFriendTest@email.com", result, model);
 
 		// THEN
 		assertEquals("This contact is already in your list", contactController.getMessage());
@@ -127,14 +137,13 @@ public class ContactControllerTest {
 	void addContact_OtherException_Test() throws Exception {
 
 		// GIVEN
-		when(contactService.isContactValid(anyString())).thenThrow(Exception.class);
+		doThrow(Exception.class).when(userService).addContact(anyString());
 
 		// WHEN
 		contactController.addContact("email", result, model);
 
 		// THEN
 		assertEquals("Error, try again", contactController.getMessage());
-
 	}
 
 }

@@ -24,10 +24,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TransferControllerTest {
+class TransferControllerTest {
 
 	@InjectMocks
 	private TransferController transferController;
@@ -103,7 +104,7 @@ public class TransferControllerTest {
 	void getTransfer_Ok_Test() {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
 		when(transferService.findAllUsersTransfers(ArgumentMatchers.any(User.class))).thenReturn(transfersDone);
 
 		// WHEN
@@ -133,8 +134,7 @@ public class TransferControllerTest {
 	void addTransfer_Ok_Test() throws InsufficientBalanceException {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-		when(transferService.isAccountBalanceSufficient(ArgumentMatchers.any(TransferDto.class), anyDouble())).thenReturn(true);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
 		when(transferRepository.save(ArgumentMatchers.any(Transfer.class))).thenReturn(transfer);
 		when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(loggedUser).thenReturn(friendUser);
 
@@ -159,11 +159,11 @@ public class TransferControllerTest {
 	}
 
 	@Test
-	void addTransfer_InsufficientBalanceException_Test() throws InsufficientBalanceException {
+	void addTransfer_InsufficientBalanceException_Test() throws InsufficientBalanceException, Exception {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-		when(transferService.isAccountBalanceSufficient(ArgumentMatchers.any(TransferDto.class), anyDouble())).thenThrow(InsufficientBalanceException.class);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
+		doThrow(InsufficientBalanceException.class).when(transferService).saveTransfer(any(User.class), any(TransferDto.class));
 
 		// WHEN
 		transferController.addTransfer(transferDto1, result, model);
@@ -176,8 +176,8 @@ public class TransferControllerTest {
 	void addTransfer_OtherException_Test() throws Exception {
 
 		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
-		when(transferService.isAccountBalanceSufficient(ArgumentMatchers.any(TransferDto.class), anyDouble())).thenThrow(Exception.class);
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
+		doThrow(Exception.class).when(transferService).saveTransfer(any(User.class), any(TransferDto.class));
 
 		// WHEN
 		transferController.addTransfer(transferDto1, result, model);

@@ -6,10 +6,10 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
+import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -17,11 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TransferServiceImplTest {
+class TransferServiceImplTest {
 
 	@InjectMocks
 	private TransferServiceImpl transferService;
@@ -32,6 +33,15 @@ public class TransferServiceImplTest {
 	@Mock
 	private UserService userService;
 
+	@Mock
+	private UserRepository userRepository;
+
+	@Captor
+	ArgumentCaptor<Transfer> transferCaptor;
+
+	@Captor
+	ArgumentCaptor<TransferDto> transferDtoCaptor;
+
 	private User loggedUser = new User();
 	private User friendUser = new User();
 
@@ -40,6 +50,8 @@ public class TransferServiceImplTest {
 	private Transfer transfer1 = new Transfer();
 
 	private TransferDto transferDto2 = new TransferDto();
+
+	private TransferDto transferDto3 = new TransferDto();
 
 	private Transfer transfer2 = new Transfer();
 
@@ -54,7 +66,7 @@ public class TransferServiceImplTest {
 		loggedUser.setPassword("passwordTest");
 		loggedUser.setAccountBalance(105.00);
 
-		friendUser.setId(1);
+		friendUser.setId(2);
 		friendUser.setFirstname("firstnameFriendTest");
 		friendUser.setLastname("lastnameFriendTest");
 		friendUser.setEmail("emailFriendTest@email.com");
@@ -79,72 +91,79 @@ public class TransferServiceImplTest {
 		transfer2.setDebtor(1);
 		transfer2.setCreditor(2);
 		transfer2.setReason("becauseAgain");
-		transfer2.setAmount(50);
+		transfer2.setAmount(0);
 		transfer2.setDate(LocalDate.now());
 
 		transferDto2.setDebtor(1);
 		transferDto2.setCreditor(2);
 		transferDto2.setReason("becauseAgain");
-		transferDto2.setAmount(50);
+		transferDto2.setAmount(0);
 		transferDto2.setDate(LocalDate.now());
 		transferDto2.setCreditorEmail("friendEmailTest@email.com");
 
+		transferDto3.setDebtor(1);
+		transferDto3.setCreditor(2);
+		transferDto3.setReason("becauseAgain");
+		transferDto3.setAmount(1000);
+		transferDto3.setDate(LocalDate.now());
+		transferDto3.setCreditorEmail("friendEmailTest@email.com");
 	}
 
 	@Test
-	void saveTransfer_Ok_Test() throws AmountZeroException {
+	void saveTransfer_Ok_Test() throws Exception {
 
 		// GIVEN
-		when(transferRepository.save(transfer1)).thenReturn(transfer1);
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friendUser);
+		when(transferRepository.save(any(Transfer.class))).thenReturn(transfer1);
+//		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
+//		when(userRepository.save(any(User.class))).thenReturn(friendUser);
 
 		// WHEN
-		transferService.saveTransfer(transferDto1);
+		transferService.saveTransfer(loggedUser, transferDto1);
 
 		// THEN
-		// Problème pour tester car ma méthode saveUser ne renvoie rien...
-		fail("not yet implemented");
+		verify(transferRepository, Mockito.times(1)).save(transferCaptor.capture());
+		verify(userService, Mockito.times(1)).addTransfer(transferDtoCaptor.capture());
+//		verify(userRepository, Mockito.times(2)).save(any(User.class));
+		Transfer transferSaved = transferCaptor.getValue();
+		assertEquals(100, transferSaved.getAmount());
+		TransferDto transferDtoSaved = transferDtoCaptor.getValue();
+		assertEquals(100, transferDtoSaved.getAmount());
 	}
 
 	@Test
-	void findAllUsersTransfers_Ok_Test(){
+	void saveTransfer_AccountBalanceNotSufficient_Test() throws Exception {
 
-/*		// GIVEN
-		List<Transfer> transfers = new ArrayList<>();
-		transfers.add(transfer1);
-		transfers.add(transfer2);
-
-		// Comment faire ?
-		when(user.getTransfersDone()).thenReturn(transfers);
-
+		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friendUser);
 
 		// WHEN
-		List<TransferDto> expected = transferService.findAllUsersTransfers(loggedUser);
+		// THEN
+		assertThrows(InsufficientBalanceException.class, ()-> transferService.saveTransfer(loggedUser, transferDto3));
+	}
+
+
+	@Test
+	void saveTransfer_AmountZero_Test() throws AmountZeroException {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+
+		// WHEN
+		// THEN
+		assertThrows(AmountZeroException.class, ()-> transferService.saveTransfer(loggedUser, transferDto2));
+	}
+
+	@Test
+	void findAllUsersTransfers_Ok_Test() throws Exception {
+
+		// GIVEN
+
+		// WHEN
 
 		// THEN
-		assertEquals(50, expected.get(1).getAmount());*/
 
 		fail("not yet implemented");
-	}
-
-	@Test
-	void isAccountBalanceSufficient_Yes_Test() throws InsufficientBalanceException {
-
-		// GIVEN
-		// WHEN
-		// THEN
-		assertTrue(transferService.isAccountBalanceSufficient(transferDto1, 105));
-
-	}
-
-	@Test
-	void isAccountBalanceSufficient_No_Test() throws InsufficientBalanceException {
-
-		// GIVEN
-		// WHEN
-		// THEN
-		assertThrows(InsufficientBalanceException.class, ()-> transferService.isAccountBalanceSufficient(transferDto1, 10));
-
 	}
 
 }

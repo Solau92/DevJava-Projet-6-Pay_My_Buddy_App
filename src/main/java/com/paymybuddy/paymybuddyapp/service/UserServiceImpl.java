@@ -3,29 +3,29 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.AmountZeroException;
-import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.*;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
-	private TransferRepository transferRepository;
+
+	private ContactService contactService;
+
 	private PasswordEncoder passwordEncoder;
 
-	public UserServiceImpl(UserRepository userRepository, TransferRepository transferRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, @Lazy ContactService contactService) {
 		this.userRepository = userRepository;
-		this.transferRepository = transferRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.contactService = contactService;
 	}
 
 	@Override
@@ -60,18 +60,16 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findById(id).get().getEmail();
 	}
 
-/*	@Override
-	public List<UserDto> findAllUsers() {
-		List<User> users = userRepository.findAll();
-		return users.stream()
-				.map((user) -> mapToUserDto(user))
-				.collect(Collectors.toList());
-	}*/
-
 	@Override
-	public void addContact(User friend) {
+	public void addContact(String friendEmail) throws Exception {
+
 		User user = getLoggedUser();
+		User friend = findUserByEmail(friendEmail);
+
+		contactService.isContactValid(user, friend);
+
 		user.getContacts().add(friend);
+
 		userRepository.save(user);
 	}
 
@@ -86,62 +84,9 @@ public class UserServiceImpl implements UserService {
 		double accountModFriend = friend.getAccountBalance() + transferDto.getAmount();
 		friend.setAccountBalance(accountModFriend);
 
-		// Ajouté pour pouvoir supprimer "saveTransfer" dans TransferService
-		// Mais marche pas, faut revoir si lien ok entre User / transfer
-/*		Transfer transfer = new Transfer();
-		transfer.setDate(transferDto.getDate());
-		transfer.setAmount(transferDto.getAmount());
-		transfer.setDebtor(transferDto.getDebtor());
-		transfer.setCreditor(transferDto.getCreditor());
-		transfer.setDate(transferDto.getDate());
-		transfer.setReason(transferDto.getReason());
-		transfer.setDate(LocalDate.now());
-
-		System.out.print("Before :");
-		user.printTransfersDone();
-		user.getTransfers_done().add(transfer);
-		System.out.print("After :");
-		user.printTransfersDone();*/
-		// //
-
 		userRepository.save(user);
 		userRepository.save(friend);
 
-		//        Transfer transfer = new Transfer();
-		//        transfer.setDate(transferDto.getDate());
-		//        transfer.setReason(transferDto.getReason());
-		//        transfer.setDebtor(transferDto.getDebtor());
-		//        transfer.setCreditor(transferDto.getCreditor());
-		//        user.getTransfers_done().add(transfer);
-
-/*      User userdeb = getLoggedUser();
-        Optional<User> usercred = userRepository.findById(transferDto.getCreditor());
-
-        Transfer transfer = new Transfer();
-        transfer.setDate(transferDto.getDate());
-        transfer.setReason(transferDto.getReason());
-        transfer.setDebtor(transferDto.getDebtor());
-        transfer.setCreditor(transferDto.getCreditor());
-        userdeb.getTransfers_done().add(transfer);
-
-        userdeb.setAccountBalance(userdeb.getAccountBalance() - transferDto.getAmount());
-        usercred.get().setAccountBalance(usercred.get().getAccountBalance() + transferDto.getAmount());
-        userRepository.save(userdeb);
-        userRepository.save(usercred.get());*/
-	}
-
-	@Override
-	public boolean isFriendAlreadyInList (String friendEmail) {
-
-		User loggedUser = getLoggedUser();
-
-		List<User> contacts = loggedUser.getContacts();
-		for (User u : contacts) {
-			if (u.getEmail().equals(friendEmail)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -170,16 +115,8 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
-/*	private UserDto mapToUserDto(User user) {
-		UserDto userDto = new UserDto();
-		userDto.setFirstname(user.getFirstname());
-		userDto.setLastname(user.getLastname());
-		userDto.setEmail(user.getEmail());
-		userDto.setAccountBalance(user.getAccountBalance());
-		return userDto;
-	}*/
-
-	private User getLoggedUser() {
+	@Override
+	public User getLoggedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return this.findUserByEmail(authentication == null ? "" : authentication.getName());
 	}

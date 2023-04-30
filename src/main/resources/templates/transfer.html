@@ -4,7 +4,6 @@
 
 <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles.css">
     <link th:href="@{/css/styles.css}" rel="stylesheet"/>
     <title>PayMyBuddy - Transfer</title>
 </head>
@@ -65,29 +64,6 @@
                 </select>
             </div>
 
-
-            <!--         <div>
-                         <select>
-                             <option selected>Select A Connection</option>
-                             <option th:each="user : ${connections}"
-                                     th:text="${user.email}"
-                                     th:value="${user.email}"
-                                     th:field="*{creditorEmail}"
-                             >
-
-                         </select>
-                     </div>-->
-
-            <!--            <div>
-                            <select th:field="*{???}">
-                                <option value="">Select A Connection</option>
-                                <option th:each="user : ${connections}"
-                                th:value="${user.email}"
-                                th:text="${user.email}"
-                                >
-                            </select>
-                        </div>-->
-
             <div class="ligne">
                 <label class="formulaire">Amount</label>
                 <input
@@ -117,10 +93,6 @@
             <div th:if="${param.success}">
                 <div class="text-alert" th:text="${message}"></div>
             </div>
-
-            <!--            <div th:if="${param.error}">
-                            <div class="text-alert">Error, the transfer was not effected !</div>
-                        </div>-->
 
             <div th:if="${param.error}">
                 <div class="text-alert" th:text="${message}"></div>

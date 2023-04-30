@@ -2,13 +2,12 @@ package com.paymybuddy.paymybuddyapp.dto;
 
 
 import jakarta.validation.constraints.*;
-import org.springframework.lang.NonNull;
 
 public class UserDto {
 
 	private Integer id;
 	@NotEmpty(message = "Email is mandatory")
-//	@Email(message = "This is not a valid email") // TODO
+	// @Email(message = "This is not a valid email") // TODO
 	private String email;
 	@NotEmpty(message = "Password is mandatory")
 	@Size(min = 4, message = "Password must contain at least 4 characters")

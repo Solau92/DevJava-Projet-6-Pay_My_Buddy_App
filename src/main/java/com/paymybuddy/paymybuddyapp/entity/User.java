@@ -14,7 +14,7 @@ public class User {
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
-			fetch = FetchType.EAGER,
+			fetch = FetchType.LAZY,
 			mappedBy = "creditor" // rajouté
 	)
 //	@JoinColumn(name = "id")
@@ -22,7 +22,7 @@ public class User {
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
-			fetch = FetchType.EAGER,
+			fetch = FetchType.LAZY,
 			mappedBy = "debtor" // rajouté
 	)
 //	@JoinColumn(name = "id")
@@ -138,4 +138,16 @@ public class User {
 		this.contacts = contacts;
 	}
 
+	public void printUser() {
+		System.out.println(this.getFirstname());
+		System.out.println(this.getAccountBalance());
+		System.out.println("Contacts :");
+
+		int i = 1;
+		for (User u : this.getContacts()) {
+			System.out.print(i + u.getFirstname());
+			i++;
+		}
+
+	}
 }

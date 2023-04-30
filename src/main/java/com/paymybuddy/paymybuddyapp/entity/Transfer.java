@@ -1,7 +1,6 @@
 package com.paymybuddy.paymybuddyapp.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
@@ -40,15 +39,6 @@ public class Transfer {
 
     @Column(nullable = false)
     private Integer debtor;
-
-
-/*    @ManyToOne
-    @JoinColumn(name="creditor")
-    private Integer creditor;
-
-    @ManyToOne
-    @JoinColumn(name="debtor")
-    private Integer debtor;*/
 
     public Integer getId() {
         return id;
