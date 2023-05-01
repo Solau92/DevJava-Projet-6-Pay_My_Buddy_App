@@ -11,8 +11,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -38,6 +43,12 @@ class UserServiceImplTest {
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
+
+	@Mock
+	private SecurityContextHolder securityContextHolder;
+
+	@Mock
+	private SecurityContext securityContext;
 
 	@Captor
 	ArgumentCaptor<User> userCaptor;
@@ -248,5 +259,33 @@ class UserServiceImplTest {
 		assertThrows(InsufficientBalanceException.class, ()->userService.withdrawMoney(200));
 	}
 
+	@Test
+	void getLoggedUser_Ok_Test(){
+
+		// TODO - Faudrait tester que authentication != null
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
+
+		// WHEN
+		User user = userService.getLoggedUser();
+
+		// THEN
+		assertNotNull(user);
+	}
+
+	@Test
+	void getLoggedUser_UserNull_Test(){
+
+		// GIVEN
+		when(securityContext.getAuthentication()).thenReturn(null);
+
+		// WHEN
+		User user = userService.getLoggedUser();
+
+		// THEN
+		assertNull(user);
+
+	}
 
 }

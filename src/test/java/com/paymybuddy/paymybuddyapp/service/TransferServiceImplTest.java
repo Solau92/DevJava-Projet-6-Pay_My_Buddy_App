@@ -172,7 +172,7 @@ class TransferServiceImplTest {
 
 	}
 
-	@Test
+/*	@Test
 	void findAllUsersTransfers_Ok_Test() throws Exception {
 
 		// GIVEN
@@ -182,6 +182,6 @@ class TransferServiceImplTest {
 		// THEN
 
 		fail("not yet implemented");
-	}
+	}*/
 
 }

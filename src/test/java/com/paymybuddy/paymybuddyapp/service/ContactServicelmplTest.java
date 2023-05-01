@@ -85,11 +85,15 @@ class ContactServicelmplTest {
 	void isContactValid_ContactAlreadyExistsException_Test() {
 
 		// GIVEN
+		User friend2 = new User();
+		friend2.setId(3);
+		friend2.setFirstname("friend2");
+		friend2.setEmail("friend2email@gmail.com");
+		loggedUser.getContacts().add(friend2);
 		loggedUser.getContacts().add(friend);
 
 		// WHEN
 		// THEN
 		assertThrows(ContactAlreadyExistsException.class, ()-> contactService.isContactValid(loggedUser, friend));
 	}
-
 }

@@ -52,6 +52,11 @@ public class AuthenticationController {
 			return "register";
 		}
 
+		if(result.hasErrors()){
+			log.info("Register page with error");
+			return "register";
+		}
+
 		userService.saveUser(userDto);
 		log.info("Index success page");
 
