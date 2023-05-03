@@ -76,14 +76,14 @@ class UserServiceImplTest {
 		loggedUser.setLastname("lastnameTest");
 		loggedUser.setEmail("emailTest@email.com");
 		loggedUser.setPassword(encodedPassword);
-		loggedUser.setAccountBalance(105.00);
+		loggedUser.setAccountBalance(100.5);
 
 		userDto.setId(1);
 		userDto.setFirstname("firstnameTest");
 		userDto.setLastname("lastnameTest");
 		userDto.setEmail("emailTest@email.com");
 		userDto.setPassword("passwordTest");
-		userDto.setAccountBalance(105.00);
+		userDto.setAccountBalance(100.5);
 
 		friend.setId(2);
 		friend.setFirstname("firstnameFriendTest");
@@ -152,7 +152,7 @@ class UserServiceImplTest {
 
 		// THEN
 		assertEquals(1, userFound.getId());
-		assertEquals(105, userFound.getAccountBalance());
+		assertEquals(100.5, userFound.getAccountBalance());
 		assertEquals("encodedPassword", loggedUser.getPassword());
 
 	}
@@ -197,7 +197,12 @@ class UserServiceImplTest {
 		when(userRepository.save(any(User.class))).thenReturn(loggedUser).thenReturn(friend);
 
 		// WHEN
+
+		System.out.print(loggedUser.getAccountBalance());
+		System.out.print(transferDto1.getAmount());
+
 		userService.addTransfer(transferDto1);
+		System.out.print(loggedUser.getAccountBalance());
 
 		// THEN
 		assertEquals(0.0, loggedUser.getAccountBalance());
@@ -217,7 +222,7 @@ class UserServiceImplTest {
 		userService.addMoney(80);
 
 		// THEN
-		assertEquals(185, loggedUser.getAccountBalance());
+		assertEquals(180.5, loggedUser.getAccountBalance());
 	}
 
 	@Test
@@ -241,7 +246,7 @@ class UserServiceImplTest {
 		when(userRepository.save(any(User.class))).thenReturn(loggedUser);
 
 		// WHEN
-		userService.withdrawMoney(105);
+		userService.withdrawMoney(100.5);
 
 		// THEN
 		assertEquals(0, loggedUser.getAccountBalance());

@@ -6,6 +6,7 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.*;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService {
 	private ContactService contactService;
 
 	private PasswordEncoder passwordEncoder;
+
+//	@Value("${project.fees}")
+	private static double FEES = 0.5/100;
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, @Lazy ContactService contactService) {
 		this.userRepository = userRepository;
@@ -78,7 +82,8 @@ public class UserServiceImpl implements UserService {
 	public void addTransfer(TransferDto transferDto) {
 
 		User user = getLoggedUser();
-		double accountModUser = user.getAccountBalance() - transferDto.getAmount()*1.05;
+		double accountModUser = user.getAccountBalance() - transferDto.getAmount() - transferDto.getAmount()*FEES;
+		accountModUser = Math.ceil(accountModUser*100)/100;
 		user.setAccountBalance(accountModUser);
 
 		User friend = userRepository.findByEmail(transferDto.getCreditorEmail());

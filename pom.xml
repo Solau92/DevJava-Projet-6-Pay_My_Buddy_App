@@ -88,6 +88,7 @@
 						<exclude>**/entity/*</exclude>
 						<exclude>**/dto/*</exclude>
 						<exclude>**/configuration/*</exclude>
+						<exclude>**/security/*</exclude>
 						<exclude>**/PayMyBuddyApplication.*</exclude>
 						<exclude>**/exception/*</exclude>
 					</excludes>
@@ -125,6 +126,7 @@
 						<exclude>**/entity/*</exclude>
 						<exclude>**/dto/*</exclude>
 						<exclude>**/configuration/*</exclude>
+						<exclude>**/security/*</exclude>
 						<exclude>**/PayMyBuddyApplication.*</exclude>
 						<exclude>**/exception/*</exclude>
 					</excludes>

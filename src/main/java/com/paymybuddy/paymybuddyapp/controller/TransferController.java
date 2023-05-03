@@ -2,6 +2,7 @@ package com.paymybuddy.paymybuddyapp.controller;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
@@ -21,7 +22,6 @@ import java.util.List;
 public class TransferController {
 
 	private UserService userService;
-
 	private TransferService transferService;
 	private String message;
 
@@ -76,6 +76,7 @@ public class TransferController {
 		}
 
 		try {
+
 			transferService.saveTransfer(loggedUser, transferDto);
 
 			message = "The transfer was successfully done ! You have now " + loggedUser.getAccountBalance() + " € on your account";
@@ -90,6 +91,8 @@ public class TransferController {
 				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance() / 1.05 + " €";
 			} else if (exception instanceof IncorrectAmountException) {
 				message = "Amount equals zero, the transfer was not effected";
+			} else if (exception instanceof ContactNotFoundException){
+				message = "No contact selected, the transfer was not effected";
 			} else {
 				message = "Unknown error, the transfer was not effected";
 			}
