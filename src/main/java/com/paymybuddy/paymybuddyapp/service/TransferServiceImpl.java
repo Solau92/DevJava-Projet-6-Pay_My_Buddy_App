@@ -34,7 +34,7 @@ public class TransferServiceImpl implements TransferService {
 	 */
 	@Transactional
 	@Override
-	public Transfer saveTransfer(User loggedUser, TransferDto transferDto) throws InsufficientBalanceException, Exception {
+	public Transfer saveTransfer(User loggedUser, TransferDto transferDto) throws IncorrectAmountException, Exception {
 
 		Integer idLoggedUser = loggedUser.getId();
 		transferDto.setDebtor(idLoggedUser);

@@ -36,7 +36,7 @@ public class HomeController {
 		if (loggedUser == null) {
 			message = "Logged user not found";
 			log.info("Home error page");
-			return "redirect:/user/transfer?error";
+			return "redirect:/user/home";
 		}
 
 		model.addAttribute("firstname", loggedUser.getFirstname());
