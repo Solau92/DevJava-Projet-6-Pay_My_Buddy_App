@@ -5,6 +5,7 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.UserNotFoundException;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class TransferController {
 	}
 
 	@GetMapping("/user/transfer")
-	public String transfer(Model model) {
+	public String transfer(Model model) throws UserNotFoundException, ContactNotFoundException {
 
 		TransferDto transfer = new TransferDto();
 		model.addAttribute("transfer", transfer);
@@ -88,10 +89,11 @@ public class TransferController {
 		} catch (Exception exception) {
 
 			if (exception instanceof InsufficientBalanceException) {
-				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + loggedUser.getAccountBalance() / 1.05 + " €";
+				double availableAMount = Math.floor(loggedUser.getAccountBalance() / 1.005 * 100) / 100;
+				message = "Your balance account is insufficient, the transfer was not effected. You can send a maximum of " + availableAMount + " €";
 			} else if (exception instanceof IncorrectAmountException) {
 				message = "Amount equals zero, the transfer was not effected";
-			} else if (exception instanceof ContactNotFoundException){
+			} else if (exception instanceof ContactNotFoundException) {
 				message = "No contact selected, the transfer was not effected";
 			} else {
 				message = "Unknown error, the transfer was not effected";

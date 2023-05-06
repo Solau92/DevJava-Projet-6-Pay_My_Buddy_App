@@ -20,12 +20,12 @@ public class HomeController {
 
 	private String message;
 
-	public String getMessage() {
-		return message;
-	}
-
 	public HomeController(UserService userService) {
 		this.userService = userService;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 
 	@GetMapping("/user/home")
@@ -48,19 +48,19 @@ public class HomeController {
 		return "home";
 	}
 
-	@PostMapping ("user/home/addmoney")
-		public String addMoney(@ModelAttribute("amount") double amount,
-	                           BindingResult result,
-	                           Model model) {
+	@PostMapping("user/home/addmoney")
+	public String addMoney(@ModelAttribute("amount") double amount,
+	                       BindingResult result,
+	                       Model model) {
 
-		try{
+		try {
 			userService.addMoney(amount);
 			this.message = "Money was successfully added to your account";
 			log.info("Home add money success page");
 			return "redirect:/user/home?successAdd";
 
 		} catch (Exception exception) {
-			if(exception instanceof IncorrectAmountException) {
+			if (exception instanceof IncorrectAmountException) {
 				this.message = "Error, the amount cannot be equal to 0 €";
 			} else {
 				this.message = "Error";
@@ -70,7 +70,7 @@ public class HomeController {
 		}
 	}
 
-	@PostMapping ("user/home/withdrawmoney")
+	@PostMapping("user/home/withdrawmoney")
 	public String withdrawMoney(@ModelAttribute("amountWithdrawn") double amountWithdrawn, Model model) {
 
 		try {
@@ -79,7 +79,7 @@ public class HomeController {
 			log.info("Home success withdraw page");
 			return "redirect:/user/home?successWithdraw";
 
-		} catch (Exception exception){
+		} catch (Exception exception) {
 			if (exception instanceof InsufficientBalanceException) {
 				message = "You can't withdraw more than the amount of your account balance";
 			} else {

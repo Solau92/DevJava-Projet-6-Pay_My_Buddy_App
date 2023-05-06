@@ -13,26 +13,26 @@ import java.util.ArrayList;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	public CustomUserDetailsService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-     User user = userRepository.findByEmail(email);
+		User user = userRepository.findByEmail(email);
 
-        if (user != null) {
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    new ArrayList<GrantedAuthority>()
-                    );
-        }else{
-            throw new UsernameNotFoundException("Invalid username or password");
-        }
-    }
+		if (user != null) {
+			return new org.springframework.security.core.userdetails.User(
+					user.getEmail(),
+					user.getPassword(),
+					new ArrayList<GrantedAuthority>()
+			);
+		} else {
+			throw new UsernameNotFoundException("Invalid username or password");
+		}
+	}
 
 }

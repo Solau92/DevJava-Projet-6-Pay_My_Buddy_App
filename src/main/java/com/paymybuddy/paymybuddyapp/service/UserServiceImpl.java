@@ -6,7 +6,6 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.*;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,14 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
+	private static double FEES = 0.5 / 100;
 	private UserRepository userRepository;
-
 	private ContactService contactService;
-
 	private PasswordEncoder passwordEncoder;
-
-//	@Value("${project.fees}")
-	private static double FEES = 0.5/100;
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, @Lazy ContactService contactService) {
 		this.userRepository = userRepository;
@@ -33,6 +28,12 @@ public class UserServiceImpl implements UserService {
 		this.contactService = contactService;
 	}
 
+	/**
+	 * Saves a User in database.
+	 *
+	 * @param userDto
+	 * @return the User saved
+	 */
 	@Override
 	public User saveUser(UserDto userDto) {
 		User user = new User();
@@ -44,6 +45,12 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+	/**
+	 * Updates user's details in database.
+	 *
+	 * @param userDto
+	 * @return the User updated
+	 */
 	@Override
 	public User updateUser(UserDto userDto) {
 		User user = findUserByEmail(userDto.getEmail());
@@ -55,16 +62,39 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+	/**
+	 * Searches in database a User given an email.
+	 *
+	 * @param email
+	 * @return the User found
+	 */
 	@Override
 	public User findUserByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
 
+	/**
+	 * Searches in database a User's email given his id.
+	 *
+	 * @param id
+	 * @return the email, if the User was found
+	 * @throws UserNotFoundException if the User was not found in database
+	 */
 	@Override
-	public String findUserEmailById(Integer id) {
+	public String findUserEmailById(Integer id) throws UserNotFoundException {
+
+		if (userRepository.findById(id).isEmpty()) {
+			throw new UserNotFoundException();
+		}
 		return userRepository.findById(id).get().getEmail();
 	}
 
+	/**
+	 * Adds and saves contact in database, given the friend's email.
+	 *
+	 * @param friendEmail
+	 * @throws Exception if the contact is not valid
+	 */
 	@Override
 	public void addContact(String friendEmail) throws Exception {
 
@@ -78,12 +108,18 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * Adds and saves transfer in database, if the transfer is valid.
+	 *
+	 * @param transferDto
+	 * @throws Exception if the transfer cannot be done
+	 */
 	@Override
-	public void addTransfer(TransferDto transferDto) {
+	public void addTransfer(TransferDto transferDto) throws Exception {
 
 		User user = getLoggedUser();
-		double accountModUser = user.getAccountBalance() - transferDto.getAmount() - transferDto.getAmount()*FEES;
-		accountModUser = Math.ceil(accountModUser*100)/100;
+		double accountModUser = Math.ceil(user.getAccountBalance() - transferDto.getAmount() - transferDto.getAmount() * FEES);
+		accountModUser = Math.ceil(accountModUser * 100) / 100;
 		user.setAccountBalance(accountModUser);
 
 		User friend = userRepository.findByEmail(transferDto.getCreditorEmail());
@@ -95,10 +131,16 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	/**
+	 * Adds and saves in data base the given amount to the User account from his bank account.
+	 *
+	 * @param amount
+	 * @throws Exception if the amount is not valid
+	 */
 	@Override
 	public void addMoney(double amount) throws Exception {
 
-		if(amount == 0) {
+		if (amount == 0) {
 			throw new IncorrectAmountException("Amount equals zero");
 		}
 		User user = getLoggedUser();
@@ -107,12 +149,18 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * Send the amount given from User's account to his bank account, and saves in data base.
+	 *
+	 * @param amountWithdrawn
+	 * @throws Exception if the amount is not valid
+	 */
 	@Override
 	public void withdrawMoney(double amountWithdrawn) throws Exception {
 
 		User user = getLoggedUser();
 
-		if(amountWithdrawn > user.getAccountBalance()) {
+		if (amountWithdrawn > user.getAccountBalance()) {
 			log.error("InsufficientBalanceException");
 			throw new InsufficientBalanceException();
 		}
@@ -122,6 +170,11 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * Returns the current logged User.
+	 *
+	 * @return User, null if not found
+	 */
 	@Override
 	public User getLoggedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

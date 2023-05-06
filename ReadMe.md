@@ -3,7 +3,7 @@
 
 ## - **Pay My Buddy Application** 
 
-An app for -------------------  emergency services. </br>
+An app to transfer money easyly . </br>
 This app uses Java to run.
 
 
@@ -50,18 +50,28 @@ The following guides illustrate how to use some features concretely:
 ## - **Running App** 
 
 Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the data base. 
-For this, please run the sql commands present in the --------- *Data.sql* file under the *resources* folder in the code base.
+For this, please run the sql commands present in the *DatabaseCreation.sql* and *Data.sql* files under the *resources* folder in the code base.
 
 Import the code into an IDE of your choice.
 
 mdp bdd...
 
- and run the *PayMyBuddyApplication.java* class to launch the application.
+Run the *PayMyBuddyApplication.java* class to launch the application.
 
 
 ## - **Documentation**
 
--------------- You can access information in a webbrowser or in Postman. </br>
+You can access the app in a webbrowser at this address : http://localhost:8080/index. </br>
+
+
+## - **UML Class Diagram**
+
+![UMLClassDiagram.png](UMLClassDiagram.png)
+
+
+## - **Physical Data Model**
+
+![PhysicalDataModel.png](PhysicalDataModel.png)
 
 
 ## - **Testing**

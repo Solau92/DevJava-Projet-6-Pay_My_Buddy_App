@@ -11,7 +11,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -64,14 +63,12 @@ class HomeControllerTest {
 		// THEN
 		assertEquals(null, homeController.getMessage());
 		assertEquals("home", expected);
-
 	}
-
 
 	@Test
 	void getHome_LoggedUserNull_Test() {
 
-/*		// GIVEN
+		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(null);
 
 		// WHEN
@@ -80,8 +77,7 @@ class HomeControllerTest {
 
 		// THEN
 		assertEquals("Logged user not found", homeController.getMessage());
-		assertEquals("redirect:/user/transfer?error", expected);*/
-
+		assertEquals("redirect:/user/home", expected);
 	}
 
 	@Test
@@ -96,7 +92,6 @@ class HomeControllerTest {
 		// THEN
 		assertEquals(100, loggedUser.getAccountBalance());
 		assertEquals("Money was successfully added to your account", homeController.getMessage());
-
 	}
 
 	@Test
@@ -110,7 +105,6 @@ class HomeControllerTest {
 
 		// THEN
 		assertEquals("Error, the amount cannot be equal to 0 €", homeController.getMessage());
-
 	}
 
 	@Test
@@ -138,7 +132,6 @@ class HomeControllerTest {
 		// THEN
 		assertEquals(100, loggedUser.getAccountBalance());
 		assertEquals("Money was sent to your bank account", homeController.getMessage());
-
 	}
 
 	@Test
@@ -152,7 +145,6 @@ class HomeControllerTest {
 
 		// THEN
 		assertEquals("You can't withdraw more than the amount of your account balance", homeController.getMessage());
-
 	}
 
 	@Test
@@ -166,7 +158,6 @@ class HomeControllerTest {
 
 		// THEN
 		assertEquals("Error", homeController.getMessage());
-
 	}
 
 }

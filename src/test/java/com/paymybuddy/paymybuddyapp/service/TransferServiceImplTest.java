@@ -53,7 +53,6 @@ class TransferServiceImplTest {
 
 	private TransferDto transferDto4 = new TransferDto();
 
-
 	private Transfer transfer2 = new Transfer();
 
 
@@ -123,7 +122,6 @@ class TransferServiceImplTest {
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friendUser);
 		when(transferRepository.save(any(Transfer.class))).thenReturn(transfer1);
-
 
 		// WHEN
 		Transfer savedTransfer = transferService.saveTransfer(loggedUser, transferDto1);

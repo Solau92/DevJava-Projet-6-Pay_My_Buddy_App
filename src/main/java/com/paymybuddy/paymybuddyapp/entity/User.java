@@ -15,17 +15,15 @@ public class User {
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
 			fetch = FetchType.LAZY,
-			mappedBy = "creditor" // rajouté
+			mappedBy = "creditor"
 	)
-//	@JoinColumn(name = "id")
 	List<Transfer> transfersReceived = new ArrayList<>();
 	@OneToMany(
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
 			fetch = FetchType.LAZY,
-			mappedBy = "debtor" // rajouté
+			mappedBy = "debtor"
 	)
-//	@JoinColumn(name = "id")
 	List<Transfer> transfersDone = new ArrayList<>();
 	@ManyToMany(
 			fetch = FetchType.LAZY
@@ -34,9 +32,8 @@ public class User {
 			name = "contact",
 			joinColumns = @JoinColumn(name = "user"),
 			inverseJoinColumns = @JoinColumn(name = "friend")
-			// unique = true
 	)
-	List<User> contacts = new ArrayList<>(); // Set
+	List<User> contacts = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -138,16 +135,4 @@ public class User {
 		this.contacts = contacts;
 	}
 
-	public void printUser() {
-		System.out.println(this.getFirstname());
-		System.out.println(this.getAccountBalance());
-		System.out.println("Contacts :");
-
-		int i = 1;
-		for (User u : this.getContacts()) {
-			System.out.print(i + u.getFirstname());
-			i++;
-		}
-
-	}
 }

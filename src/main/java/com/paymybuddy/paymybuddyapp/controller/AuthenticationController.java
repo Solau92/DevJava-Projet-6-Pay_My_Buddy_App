@@ -1,15 +1,9 @@
 package com.paymybuddy.paymybuddyapp.controller;
 
-import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
-import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.service.TransferService;
-import com.paymybuddy.paymybuddyapp.service.TransferServiceImpl;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

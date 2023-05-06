@@ -4,7 +4,6 @@ import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.LoggedUserException;
-import com.paymybuddy.paymybuddyapp.service.ContactService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

@@ -3,7 +3,9 @@ package com.paymybuddy.paymybuddyapp.controller;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.UserNotFoundException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import com.paymybuddy.paymybuddyapp.service.TransferService;
@@ -22,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -50,7 +51,7 @@ class TransferControllerTest {
 
 	private static User friendUser = new User();
 
-	private static Transfer transfer = new Transfer();
+	private static Transfer transfer1 = new Transfer();
 
 	private static TransferDto transferDto1 = new TransferDto();
 	private static TransferDto transferDto2 = new TransferDto();
@@ -65,7 +66,7 @@ class TransferControllerTest {
 		loggedUser.setLastname("lastnameTest");
 		loggedUser.setEmail("emailTest@email.com");
 		loggedUser.setPassword("passwordTest");
-		loggedUser.setAccountBalance(105.00);
+		loggedUser.setAccountBalance(100.5);
 
 		friendUser.setId(1);
 		friendUser.setFirstname("friendFirstnameTest");
@@ -74,12 +75,12 @@ class TransferControllerTest {
 		friendUser.setPassword("friendPasswordTest");
 		friendUser.setAccountBalance(50.00);
 
-		transfer.setId(1);
-		transfer.setDebtor(2);
-		transfer.setCreditor(1);
-		transfer.setReason("because");
-		transfer.setAmount(200);
-		transfer.setDate(LocalDate.now());
+		transfer1.setId(1);
+		transfer1.setDebtor(2);
+		transfer1.setCreditor(1);
+		transfer1.setReason("because");
+		transfer1.setAmount(200);
+		transfer1.setDate(LocalDate.now());
 
 		transferDto1.setDebtor(2);
 		transferDto1.setCreditor(1);
@@ -101,7 +102,7 @@ class TransferControllerTest {
 	}
 
 	@Test
-	void getTransfer_Ok_Test() {
+	void getTransfer_Ok_Test() throws UserNotFoundException, ContactNotFoundException {
 
 		// GIVEN
 		when(userService.getLoggedUser()).thenReturn(loggedUser);
@@ -117,7 +118,7 @@ class TransferControllerTest {
 	}
 
 	@Test
-	void getTransfer_LoggedUserNull_Test() {
+	void getTransfer_LoggedUserNull_Test() throws UserNotFoundException, ContactNotFoundException {
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(null);
@@ -135,14 +136,14 @@ class TransferControllerTest {
 
 		// GIVEN
 		when(userService.getLoggedUser()).thenReturn(loggedUser);
-		when(transferRepository.save(ArgumentMatchers.any(Transfer.class))).thenReturn(transfer);
+		when(transferRepository.save(ArgumentMatchers.any(Transfer.class))).thenReturn(transfer1);
 		when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(loggedUser).thenReturn(friendUser);
 
 		// WHEN
 		transferController.addTransfer(transferDto1, result, model);
 
 		// THEN
-		assertEquals("The transfer was successfully done ! You have now 105.0 € on your account", transferController.getMessage());
+		assertEquals("The transfer was successfully done ! You have now 100.5 € on your account", transferController.getMessage());
 	}
 
 	@Test

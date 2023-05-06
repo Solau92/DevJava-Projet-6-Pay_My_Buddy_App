@@ -48,6 +48,7 @@ class ContactControllerTest {
 
 	@BeforeEach
 	void setUp(){
+
 		loggedUser.setId(1);
 		loggedUser.setFirstname("firstnameTest");
 		loggedUser.setLastname("lastnameTest");

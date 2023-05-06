@@ -158,7 +158,7 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void findUserEmailById_Ok_Test(){
+	void findUserEmailById_Ok_Test() throws UserNotFoundException {
 
 		// GIVEN
 		Optional<User> optionalUser = Optional.of(loggedUser);
@@ -190,7 +190,7 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void addTransfer_Ok_Test(){
+	void addTransfer_Ok_Test() throws Exception {
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(friend);
@@ -208,7 +208,6 @@ class UserServiceImplTest {
 		assertEquals(0.0, loggedUser.getAccountBalance());
 		assertEquals(310.0, friend.getAccountBalance());
 	}
-
 
 
 	@Test

@@ -3,14 +3,13 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
-import com.paymybuddy.paymybuddyapp.exception.ContactAlreadyExistsException;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
+import com.paymybuddy.paymybuddyapp.exception.UserNotFoundException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,31 +21,29 @@ import java.util.Objects;
 @Service
 public class TransferServiceImpl implements TransferService {
 
+	private static double FEES = 0.5 / 100;
 	private TransferRepository transferRepository;
-
 	private UserService userService;
 
-//	@Value("${project.fees}")
-	private static double FEES = 0.5/100;
-
-	public TransferServiceImpl(TransferRepository transferRepository, UserService userService){
+	public TransferServiceImpl(TransferRepository transferRepository, UserService userService) {
 		this.transferRepository = transferRepository;
 		this.userService = userService;
 	}
 
 	/**
 	 * Saves the transfer in database if the transfer attributes are valid.
+	 *
 	 * @param transferDto
 	 * @throws IncorrectAmountException
 	 */
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	@Override
 	public Transfer saveTransfer(User loggedUser, TransferDto transferDto) throws IncorrectAmountException, Exception {
 
 		Integer idLoggedUser = loggedUser.getId();
 		transferDto.setDebtor(idLoggedUser);
 
-		if(Objects.isNull(userService.findUserByEmail(transferDto.getCreditorEmail()))) {
+		if (Objects.isNull(userService.findUserByEmail(transferDto.getCreditorEmail()))) {
 			throw new ContactNotFoundException();
 		}
 
@@ -54,9 +51,9 @@ public class TransferServiceImpl implements TransferService {
 
 		isAccountBalanceSufficient(transferDto, loggedUser.getAccountBalance());
 
-		if(transferDto.getAmount() <= 0) {
+		if (transferDto.getAmount() <= 0) {
 
-			if(transferDto.getAmount() == 0) {
+			if (transferDto.getAmount() == 0) {
 				log.error("IncorrectAmountException : equals zero");
 				throw new IncorrectAmountException("Amount equals zero");
 			}
@@ -79,11 +76,12 @@ public class TransferServiceImpl implements TransferService {
 
 	/**
 	 * Returns the list of TransferDto done by the User given in parameter.
+	 *
 	 * @param user
 	 * @return list of TransferDto
 	 */
 	@Override
-	public List<TransferDto> findAllUsersTransfers(User user) {
+	public List<TransferDto> findAllUsersTransfers(User user) throws UserNotFoundException {
 		List<Transfer> transfers = user.getTransfersDone();
 		List<TransferDto> transfersDto = new ArrayList<>();
 
@@ -103,7 +101,8 @@ public class TransferServiceImpl implements TransferService {
 	}
 
 	/**
-	 * Returns true if the account balance is sufficient to make the transfer, throws an Exception if not
+	 * Returns true if the account balance is sufficient to make the transfer, throws an Exception if not.
+	 *
 	 * @param transferDto
 	 * @param accountBalance
 	 * @return true if the account balance is sufficient to make the transfer
@@ -111,11 +110,11 @@ public class TransferServiceImpl implements TransferService {
 	 */
 	private boolean isAccountBalanceSufficient(TransferDto transferDto, double accountBalance) throws InsufficientBalanceException {
 
-		if(transferDto.getAmount()*(1 + FEES) > accountBalance) {
+		if (transferDto.getAmount() * (1 + FEES) > accountBalance) {
 			log.error("InsufficientBalanceException");
 			throw new InsufficientBalanceException();
 		}
-			return true;
+		return true;
 	}
 
 }

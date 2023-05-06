@@ -3,7 +3,6 @@ package com.paymybuddy.paymybuddyapp.controller;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
-import com.paymybuddy.paymybuddyapp.service.TransferService;
 import com.paymybuddy.paymybuddyapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +44,7 @@ class AuthenticationControllerTest {
 
 	@BeforeEach
 	void setUp(){
+
 		loggedUser.setId(1);
 		loggedUser.setFirstname("firstname");
 		loggedUser.setLastname("lastname");
@@ -62,7 +62,7 @@ class AuthenticationControllerTest {
 		user.setId(2);
 		user.setFirstname("firstnameTest");
 		user.setLastname("lastnameTest");
-		user.setEmail("emailTest@email.com");
+		user.setEmail("email@email.com");
 		user.setPassword("passwordTest");
 		user.setAccountBalance(50.00);
 	}

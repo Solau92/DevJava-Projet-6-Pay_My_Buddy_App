@@ -4,6 +4,14 @@ import java.time.LocalDate;
 
 public class TransferDto {
 
+	private Integer id;
+	private LocalDate date;
+	private double amount;
+	private String reason;
+	private Integer creditor;
+	private String creditorEmail;
+	private Integer debtor;
+
 	public TransferDto() {
 	}
 
@@ -15,20 +23,6 @@ public class TransferDto {
 		this.creditor = creditor;
 		this.debtor = debtor;
 	}
-
-	private Integer id;
-
-	private LocalDate date;
-
-	private double amount;
-
-	private String reason;
-
-	private Integer creditor;
-
-	private String creditorEmail;
-
-	private Integer debtor;
 
 	public Integer getId() {
 		return id;

@@ -20,22 +20,40 @@ public class ContactServiceImpl implements ContactService {
 		this.userService = userService;
 	}
 
+	/**
+	 * Returns true if the contact is valid, throws an exception otherwise.
+	 *
+	 * @param user
+	 * @param friend
+	 * @return true if the contact is valid.
+	 * @throws LoggedUserException
+	 * @throws ContactNotFoundException
+	 * @throws ContactAlreadyExistsException
+	 * @throws Exception
+	 */
 	@Override
 	public boolean isContactValid(User user, User friend) throws LoggedUserException, ContactNotFoundException, ContactAlreadyExistsException, Exception {
 
-		if(Objects.isNull(friend)) {
+		if (Objects.isNull(friend)) {
 			log.error("ContactNotFoundException");
 			throw new ContactNotFoundException();
-		} else if(friend.getEmail().equals(user.getEmail())) {
+		} else if (friend.getEmail().equals(user.getEmail())) {
 			log.error("LoggedUserException");
 			throw new LoggedUserException();
-		} else if(isFriendAlreadyInList(user, friend)) {
+		} else if (isFriendAlreadyInList(user, friend)) {
 			log.error("ContactAlreadyExistsException");
-		throw new ContactAlreadyExistsException();
+			throw new ContactAlreadyExistsException();
 		}
 		return true;
 	}
 
+	/**
+	 * Returns true if the contact is already in loggedUser'"'s list of contacts, false otherwise.
+	 *
+	 * @param loggedUser
+	 * @param friend
+	 * @return true if the contact is already in loggedUser's list of contacts, false otherwise
+	 */
 	public boolean isFriendAlreadyInList(User loggedUser, User friend) {
 
 		List<User> contacts = loggedUser.getContacts();
