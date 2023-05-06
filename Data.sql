@@ -1,0 +1,36 @@
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('adaLovelace@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Ada', 'LOVELACE', 200);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('graceHopper@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Grace', 'HOPPER', 300);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('billGates@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Bill', 'GATES', 500);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('alanTuring@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Alan', 'TURING', 200);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('kenThomson@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Ken', 'THOMSON', 100);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('linusTorvalds@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Linus', 'TORVALDS', 150);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('idaRhodes@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Ida', 'RHODES', 400);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('hedyLamarr@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Hedy', 'LAMARR', 160);
+INSERT INTO user (email, password, firstname, lastname, account_balance) VALUES ('adeleGoldberg@email.com', '$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj.', 'Adele', 'GOLDBERG', 250);
+
+INSERT INTO contact VALUES (1, 2);
+INSERT INTO contact VALUES (1, 3);
+INSERT INTO contact VALUES (1, 4);
+INSERT INTO contact VALUES (1, 5);
+INSERT INTO contact VALUES (2, 1);
+INSERT INTO contact VALUES (2, 7);
+INSERT INTO contact VALUES (2, 8);
+INSERT INTO contact VALUES (3, 4);
+INSERT INTO contact VALUES (3, 2);
+INSERT INTO contact VALUES (4, 3);
+INSERT INTO contact VALUES (5, 4);
+INSERT INTO contact VALUES (6, 5);
+INSERT INTO contact VALUES (7, 1);
+INSERT INTO contact VALUES (8, 7);
+INSERT INTO contact VALUES (2, 6);
+
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-26', 100, ' because i owe you 100', 1, 2);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-27', 200, ' because i owe you 200', 1, 3);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-27', 50, ' because i owe you 50', 1, 4);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-28', 150, ' because i owe you 150', 1, 5);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-29', 80, ' because i owe you 80', 2, 1);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-29', 30, ' because i owe you 30', 2, 7);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-30', 140, ' because i owe you 140', 3, 2);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-04-30', 10, ' because i owe you 10', 4, 3);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-05-01', 15, ' because i owe you 15', 8, 7);
+INSERT INTO transfer (date, amount, reason, creditor, debtor) VALUES ('2023-05-01', 300, ' because i owe you 30', 2, 6);
