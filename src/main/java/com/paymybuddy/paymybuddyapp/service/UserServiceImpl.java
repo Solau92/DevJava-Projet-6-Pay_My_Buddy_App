@@ -118,8 +118,8 @@ public class UserServiceImpl implements UserService {
 	public void addTransfer(TransferDto transferDto) throws Exception {
 
 		User user = getLoggedUser();
-		double accountModUser = Math.ceil(user.getAccountBalance() - transferDto.getAmount() - transferDto.getAmount() * FEES);
-		accountModUser = Math.ceil(accountModUser * 100) / 100;
+
+		double accountModUser = Math.ceil((user.getAccountBalance() - transferDto.getAmount() - transferDto.getAmount() * FEES) * 100) / 100;
 		user.setAccountBalance(accountModUser);
 
 		User friend = userRepository.findByEmail(transferDto.getCreditorEmail());

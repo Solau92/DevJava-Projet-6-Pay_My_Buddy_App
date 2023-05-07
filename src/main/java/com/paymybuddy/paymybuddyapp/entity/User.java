@@ -135,4 +135,18 @@ public class User {
 		this.contacts = contacts;
 	}
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"transfersReceived=" + transfersReceived +
+				", transfersDone=" + transfersDone +
+				", contacts=" + contacts +
+				", id=" + id +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", accountBalance=" + accountBalance +
+				'}';
+	}
 }

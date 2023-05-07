@@ -1,7 +1,8 @@
-/*
+
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
 import com.paymybuddy.paymybuddyapp.controller.HomeController;
+import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
 import com.paymybuddy.paymybuddyapp.service.UserService;
@@ -10,109 +11,136 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "user@gmail.com", password = "1234")
+@ActiveProfiles("test")
 class HomeIT {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
+	private WebApplicationContext context;
+	@Autowired
 	UserRepository userRepository;
 
 	@Autowired
 	UserService userService;
 
+	private String loggedUserEmail;
+
 	@BeforeEach
-	void setUp(){
-		mockMvc = MockMvcBuilders.standaloneSetup(new HomeController(userService)).build();
+	void setUpEach() throws Exception {
+
+		mockMvc = MockMvcBuilders
+				.webAppContextSetup(context)
+				.apply(springSecurity())
+				.build();
+
+		// I clean the database
+		userRepository.deleteAll();
+
+		// I create of a new User
+		loggedUserEmail = "email@email.com";
+		UserDto userToSave = new UserDto();
+		userToSave.setFirstname("firstname");
+		userToSave.setLastname("lastname");
+		userToSave.setEmail(loggedUserEmail);
+		userToSave.setPassword("1234");
+
+		// I save this User in database
+		mockMvc.perform(post("/register/save")
+						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("firstname", userToSave.getFirstname())
+						.param("lastname", userToSave.getLastname())
+						.param("email", userToSave.getEmail())
+						.param("password", userToSave.getPassword())
+						.with(csrf())
+				);
 	}
 
-
-	/////////////////////////////////////////////////////////////////
-
 	@Test
-	void addMoney_IT(){
+	void addMoney_IT() throws Exception {
 
-		User loggedUser = new User();
-		// Comment je "trouve" mon loggedUser ?
+		// I get the User saved from database
+		User loggedUser = userService.findUserByEmail(loggedUserEmail);
+
 		double initialAmount = loggedUser.getAccountBalance();
 
-		// GIVEN
-		// WHEN
-		// Requête post page home avec le montant
-
+		// I add money in the User account
 		double addedAmount = 100;
 
+		mockMvc.perform(post("/user/home/addmoney")
+						.with(user(loggedUser.getEmail()))
+						.with(csrf())
+						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("amount", String.valueOf(addedAmount))
+				)
+				.andDo(print())
+				.andExpect(redirectedUrl("/user/home?successAdd"));
+
+		// I get the User saved from database
 		User loggedUserInDataBase = userService.findUserByEmail(loggedUser.getEmail());
 
-		// THEN
+		// I check that the account amount is equal to the initial amount + the added amount
 		assertEquals(initialAmount + addedAmount, loggedUserInDataBase.getAccountBalance());
-
-		fail("TODO");
-
 	}
 
 	@Test
-	void withdrawMoney_IT(){
+	void withdrawMoney_IT() throws Exception {
 
-		User loggedUser = new User();
-		// Comment je "trouve" mon loggedUser ?
+		// I get the User saved from database
+		User loggedUser = userService.findUserByEmail(loggedUserEmail);
+
 		double initialAmount = loggedUser.getAccountBalance();
 
-		// GIVEN
-		// WHEN
-		// Requête post page home avec le montant
-		double withdrawnAmount = 100;
+		// I add money in the User account
+		double addedAmount = 100;
 
-		// WHEN
+		mockMvc.perform(post("/user/home/addmoney")
+						.with(user(loggedUser.getEmail()))
+						.with(csrf())
+						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("amount", String.valueOf(addedAmount))
+				)
+				.andDo(print())
+				.andExpect(redirectedUrl("/user/home?successAdd"));
+
+		// I withdraw money from the User account
+		double withdrawnAmount = 50;
+
+		mockMvc.perform(post("/user/home/withdrawmoney")
+						.with(user(loggedUser.getEmail()))
+						.with(csrf())
+						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("amountWithdrawn", String.valueOf(withdrawnAmount))
+				)
+				.andDo(print())
+				.andExpect(redirectedUrl("/user/home?successWithdraw"));
+
+		// I get the User saved from database
 		User loggedUserInDataBase = userService.findUserByEmail(loggedUser.getEmail());
 
-		// THEN
-		assertEquals(initialAmount - withdrawnAmount, loggedUserInDataBase.getAccountBalance());
-
-		fail("TODO");
-
+		// I check that the account amount is equal to the initial amount + the added amount - the withdrawn amount
+		assertEquals(initialAmount + addedAmount - withdrawnAmount, loggedUserInDataBase.getAccountBalance());
 	}
 
-	/////////////////////////////////////////////////////////////////
-
-
-//	@Test
-//	@WithMockUser(username = "user@gmail.com", password = "1234")
-//	void getHomeTest() throws Exception {
-//
-//		mockMvc.perform(get("/user/home"))
-//				.andExpect(status().isAccepted());
-//
-//		mockMvc.perform(get("/user/home"))
-//				.andDo(print())
-//				.andExpect(view().name("home"));
-//
-//				mockMvc.perform(get("/user/home"))
-//						.with((user("user@email.com").password("$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj."))))
-//						.andExpect(view().name("home"));
-//	}
-
-
 }
-*/

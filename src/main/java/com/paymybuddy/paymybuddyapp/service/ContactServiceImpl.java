@@ -14,10 +14,6 @@ import java.util.Objects;
 @Service
 public class ContactServiceImpl implements ContactService {
 
-	public ContactServiceImpl() {
-
-	}
-
 	/**
 	 * Returns true if the contact is valid, throws an exception otherwise.
 	 *

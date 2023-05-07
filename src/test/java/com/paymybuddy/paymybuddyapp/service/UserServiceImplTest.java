@@ -39,22 +39,13 @@ class UserServiceImplTest {
 	private UserRepository userRepository;
 
 	@Mock
-	private TransferRepository transferRepository;
-
-	@Mock
 	private PasswordEncoder passwordEncoder;
-
-	@Mock
-	private SecurityContextHolder securityContextHolder;
 
 	@Mock
 	private SecurityContext securityContext;
 
 	@Captor
 	ArgumentCaptor<User> userCaptor;
-
-	@Captor
-	ArgumentCaptor<UserDto> userDtoCaptor;
 
 	private User loggedUser = new User();
 	private UserDto userDto = new UserDto();
@@ -173,6 +164,19 @@ class UserServiceImplTest {
 	}
 
 	@Test
+	void findUserEmailById_NotFound_Test() throws UserNotFoundException {
+
+		// GIVEN
+		Optional<User> optionalUser = Optional.empty();
+		when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+
+		// WHEN
+		// THEN
+		assertThrows(UserNotFoundException.class, ()->userService.findUserEmailById(3));
+
+	}
+
+	@Test
 	void addContact_Ok_Test() throws Exception {
 
 		// GIVEN
@@ -207,6 +211,19 @@ class UserServiceImplTest {
 		// THEN
 		assertEquals(0.0, loggedUser.getAccountBalance());
 		assertEquals(310.0, friend.getAccountBalance());
+	}
+
+	@Test
+	void addTransfer_ContactNotFound_Test() throws Exception {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(null);
+
+		// WHEN
+		// THEN
+		assertThrows(ContactNotFoundException.class, ()->userService.addTransfer(transferDto1));
+		assertEquals(100.5, loggedUser.getAccountBalance());
+		assertEquals(210.0, friend.getAccountBalance());
 	}
 
 
@@ -265,8 +282,6 @@ class UserServiceImplTest {
 
 	@Test
 	void getLoggedUser_Ok_Test(){
-
-		// TODO - Faudrait tester que authentication != null
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser);
