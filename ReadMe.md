@@ -3,7 +3,7 @@
 
 ## - **Pay My Buddy Application** 
 
-An app to transfer money easyly . </br>
+An app to transfer money easily . </br>
 This app uses Java to run.
 
 
@@ -26,9 +26,7 @@ You need to install :
 * [Install Maven](https://maven.apache.org/install.html)
 * [Install MySQL](https://dev.mysql.com/downloads/mysql/)
 
-After downloading the mysql 8 installer and installing it, you will be asked to configure the password for the default root account. 
---------------------- This code uses the default root account to connect and the password can be set as rootroot. 
-If you add another user/credentials make sure to change the same in the code base.
+After downloading the mysql 8 installer and installing it, you will be asked to configure the password for the default root account.
 
 
 ### Reference Documentation
@@ -44,25 +42,21 @@ The following guides illustrate how to use some features concretely:
 
 * [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
 
 ## - **Running App** 
 
-Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the data base. 
+Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database. 
 For this, please run the sql commands present in the *DatabaseCreation.sql* and *Data.sql* files under the *resources* folder in the code base.
 
-Import the code into an IDE of your choice.
+Import the code on your computer.
 
-mdp bdd...
+To run the app, go to the folder that contains the pom.xml file and execute the following command in which you have to replace "*%username%*" by your username and "%*password*%" by your password required to access your database : 
+ "mvn spring-boot:run "-Dspring-boot.run.arguments=--spring.datasource.username=%username% --spring.datasource.password=%password%"
 
-Run the *PayMyBuddyApplication.java* class to launch the application.
+You can access the app in a browser at this address : http://localhost:8080/index. </br>
 
-
-## - **Documentation**
-
-You can access the app in a webbrowser at this address : http://localhost:8080/index. </br>
-
+NB : the passwords of all users in database are "1234".
 
 ## - **UML Class Diagram**
 
@@ -78,5 +72,5 @@ You can access the app in a webbrowser at this address : http://localhost:8080/i
 
 The app has unit tests and integration tests written. </br>
 To run the tests from maven, go to the folder that contains the pom.xml file and execute the following command : *mvn test*. </br>
-To get both Surefire Report and Jacoco Report in Maven Site, you can execute the command mvn site and open the file « *index.html* » in the folder ./target/site. </br>
+To get both Surefire Report and Jacoco Report in Maven Site, you can execute the command mvn site and open the file « *index.html* » in the folder « *./target/site* ». </br>
 JaCoCo and Surefire reports are in the section « *Project Reports* ».

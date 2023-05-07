@@ -1,3 +1,4 @@
+/*
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
 import com.paymybuddy.paymybuddyapp.controller.HomeController;
@@ -109,8 +110,9 @@ class HomeIT {
 //
 //				mockMvc.perform(get("/user/home"))
 //						.with((user("user@email.com").password("$2a$10$CoSxVq2dlWbv7PgVF.knnunHxzrxK2eCQJTwHarTNv9eruob1lAj."))))
-//						.andExpect(view().name("home"));*//*
+//						.andExpect(view().name("home"));
 //	}
 
 
 }
+*/

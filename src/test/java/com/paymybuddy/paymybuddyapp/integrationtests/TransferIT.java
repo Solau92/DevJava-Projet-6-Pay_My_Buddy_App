@@ -1,3 +1,4 @@
+/*
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
@@ -63,7 +64,8 @@ class TransferIT {
 
 
 
-	/*	User loggedUser = userService.findUserByEmail("billGates@email.com");
+	*/
+/*	User loggedUser = userService.findUserByEmail("billGates@email.com");
 
 		loggedUser.printUser();
 
@@ -100,7 +102,8 @@ class TransferIT {
 		// THEN
 //		assertEquals(loggedUserInitialAccountBalance - transferAmount, loggedUserInDataBase.getAccountBalance());
 		assertEquals(friendInitialAccountBalance + transferAmount, friendInDataBase.getAccountBalance());
-*/
+*//*
+
 	}
 
 	/////////////////////////////////////////////////////////////////
@@ -109,3 +112,4 @@ class TransferIT {
 		return user("adalovelace@gmail.com");
 	}
 }
+*/

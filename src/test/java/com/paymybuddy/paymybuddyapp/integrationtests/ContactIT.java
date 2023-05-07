@@ -1,3 +1,4 @@
+
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
 import com.paymybuddy.paymybuddyapp.entity.User;
@@ -40,6 +41,7 @@ class ContactIT {
 	@Autowired
 	private WebApplicationContext context;
 
+
 	@BeforeEach
 	public void setUp(){
 		mockMvc = MockMvcBuilders
@@ -63,7 +65,8 @@ class ContactIT {
 				.andDo(print())
 				.andExpect(view().name("redirect:/user/contact?success"));
 
-	/*	User loggedUser = new User();
+
+	User loggedUser = new User();
 		// Comment je "trouve" mon loggedUser ?
 
 		User friend = userService.findUserByEmail("billGates@email.com");
@@ -78,7 +81,8 @@ class ContactIT {
 		// THEN
 		assertTrue(contacts.contains(friend));
 
-		fail("TODO");*/
+		fail("TODO");
+
 
 	}
 
@@ -89,3 +93,4 @@ class ContactIT {
 
 
 }
+

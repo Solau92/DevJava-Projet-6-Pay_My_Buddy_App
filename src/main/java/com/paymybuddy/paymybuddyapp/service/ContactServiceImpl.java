@@ -14,10 +14,8 @@ import java.util.Objects;
 @Service
 public class ContactServiceImpl implements ContactService {
 
-	private UserService userService;
+	public ContactServiceImpl() {
 
-	public ContactServiceImpl(UserService userService) {
-		this.userService = userService;
 	}
 
 	/**
