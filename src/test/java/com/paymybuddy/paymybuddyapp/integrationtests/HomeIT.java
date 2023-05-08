@@ -1,7 +1,6 @@
 
 package com.paymybuddy.paymybuddyapp.integrationtests;
 
-import com.paymybuddy.paymybuddyapp.controller.HomeController;
 import com.paymybuddy.paymybuddyapp.dto.UserDto;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.repository.UserRepository;
