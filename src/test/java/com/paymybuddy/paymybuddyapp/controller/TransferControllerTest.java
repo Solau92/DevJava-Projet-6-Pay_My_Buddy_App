@@ -4,6 +4,7 @@ import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
 import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
+import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.exception.UserNotFoundException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
@@ -171,6 +172,34 @@ class TransferControllerTest {
 
 		// THEN
 		assertEquals("Your balance account is insufficient, the transfer was not effected. You can send a maximum of 100.0 €", transferController.getMessage());
+	}
+
+	@Test
+	void addTransfer_AmountEqualsZero_Test() throws InsufficientBalanceException, Exception {
+
+		// GIVEN
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
+		doThrow(IncorrectAmountException.class).when(transferService).saveTransfer(any(User.class), any(TransferDto.class));
+
+		// WHEN
+		transferController.addTransfer(transferDto1, result, model);
+
+		// THEN
+		assertEquals("Amount equals zero, the transfer was not effected", transferController.getMessage());
+	}
+
+	@Test
+	void addTransfer_NoContactSelected_Test() throws InsufficientBalanceException, Exception {
+
+		// GIVEN
+		when(userService.getLoggedUser()).thenReturn(loggedUser);
+		doThrow(ContactNotFoundException.class).when(transferService).saveTransfer(any(User.class), any(TransferDto.class));
+
+		// WHEN
+		transferController.addTransfer(transferDto1, result, model);
+
+		// THEN
+		assertEquals("No contact selected, the transfer was not effected", transferController.getMessage());
 	}
 
 	@Test

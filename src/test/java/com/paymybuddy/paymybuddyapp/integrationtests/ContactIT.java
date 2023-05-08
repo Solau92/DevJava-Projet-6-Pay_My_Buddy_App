@@ -16,9 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -103,7 +100,7 @@ class ContactIT {
 
 		User friendUser = userService.findUserByEmail(friendUserEmail);
 
-		// I had the friend to the contact's loggedUser list
+		// I add the friend to the contact's loggedUser list
 		mockMvc.perform(post("/user/contact/save")
 						.with(user(loggedUser.getEmail()))
 						.with(csrf())
@@ -112,7 +109,6 @@ class ContactIT {
 				)
 				.andDo(print())
 				.andExpect(redirectedUrl("/user/contact?success"));
-
 	}
 
 }

@@ -3,7 +3,7 @@
 
 ## - **Pay My Buddy Application** 
 
-An app to transfer money easily . </br>
+An app to transfer money easily. </br>
 This app uses Java to run.
 
 
@@ -46,7 +46,7 @@ The following guides illustrate how to use some features concretely:
 
 ## - **Running App** 
 
-Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database. 
+Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database. </br>
 For this, please run the sql commands present in the *DatabaseCreation.sql* and *Data.sql* files under the *resources* folder in the code base.
 
 Import the code on your computer.
@@ -71,6 +71,7 @@ NB : the passwords of all users in database are "1234".
 ## - **Testing**
 
 The app has unit tests and integration tests written. </br>
+Before running the tests, complete the fields "*spring.datasource.username*" and "*spring.datasource.password*" in the file "*application-test.properties*" which is in the directory named "*resources*".
 To run the tests from maven, go to the folder that contains the pom.xml file and execute the following command : *mvn test*. </br>
-To get both Surefire Report and Jacoco Report in Maven Site, you can execute the command mvn site and open the file « *index.html* » in the folder « *./target/site* ». </br>
-JaCoCo and Surefire reports are in the section « *Project Reports* ».
+To get both Surefire Report and Jacoco Report in Maven Site, you can execute the command mvn site and open the file "*index.html*" in the folder "*./target/site*". </br>
+JaCoCo and Surefire reports are in the section "*Project Reports*".

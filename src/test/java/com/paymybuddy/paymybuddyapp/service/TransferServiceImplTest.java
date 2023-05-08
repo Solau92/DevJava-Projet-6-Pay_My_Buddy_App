@@ -3,6 +3,7 @@ package com.paymybuddy.paymybuddyapp.service;
 import com.paymybuddy.paymybuddyapp.dto.TransferDto;
 import com.paymybuddy.paymybuddyapp.entity.Transfer;
 import com.paymybuddy.paymybuddyapp.entity.User;
+import com.paymybuddy.paymybuddyapp.exception.ContactNotFoundException;
 import com.paymybuddy.paymybuddyapp.exception.IncorrectAmountException;
 import com.paymybuddy.paymybuddyapp.exception.InsufficientBalanceException;
 import com.paymybuddy.paymybuddyapp.repository.TransferRepository;
@@ -133,6 +134,18 @@ class TransferServiceImplTest {
 		TransferDto transferDtoSaved = transferDtoCaptor.getValue();
 		assertEquals(100, transferDtoSaved.getAmount());
 	}
+
+	@Test
+	void saveTransfer_FriendNotFound_Test() throws Exception {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(null);
+
+		// WHEN
+		// THEN
+		assertThrows(ContactNotFoundException.class, ()->transferService.saveTransfer(loggedUser, transferDto1));
+	}
+
 
 	@Test
 	void saveTransfer_AccountBalanceNotSufficient_Test() throws Exception {

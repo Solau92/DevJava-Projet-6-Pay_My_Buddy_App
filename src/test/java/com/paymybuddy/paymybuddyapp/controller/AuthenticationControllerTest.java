@@ -20,30 +20,22 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class AuthenticationControllerTest {
 
+	private static User loggedUser = new User();
+	private static UserDto loggedUserDto = new UserDto();
+	private static User user = new User();
 	@InjectMocks
 	private AuthenticationController authenticationController;
-
 	@Mock
 	private UserService userService;
-
 	@Mock
 	private UserRepository userRepository;
-
 	@Mock
 	private Model model;
-
 	@Mock
 	private BindingResult result;
 
-	private static User loggedUser = new User();
-
-	private static UserDto loggedUserDto = new UserDto();
-
-	private static User user = new User();
-
-
 	@BeforeEach
-	void setUp(){
+	void setUp() {
 
 		loggedUser.setId(1);
 		loggedUser.setFirstname("firstname");
@@ -131,6 +123,20 @@ class AuthenticationControllerTest {
 
 		// GIVEN
 		when(userService.findUserByEmail(anyString())).thenReturn(user);
+
+		// WHEN
+		String expected = authenticationController.registration(loggedUserDto, result, model);
+
+		// THEN
+		assertEquals("register", expected);
+	}
+
+	@Test
+	void registration_OtherErrors_Test() {
+
+		// GIVEN
+		when(userService.findUserByEmail(anyString())).thenReturn(null);
+		when(result.hasErrors()).thenReturn(true);
 
 		// WHEN
 		String expected = authenticationController.registration(loggedUserDto, result, model);

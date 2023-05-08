@@ -214,20 +214,6 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void addTransfer_ContactNotFound_Test() throws Exception {
-
-		// GIVEN
-		when(userService.findUserByEmail(anyString())).thenReturn(loggedUser).thenReturn(null);
-
-		// WHEN
-		// THEN
-		assertThrows(ContactNotFoundException.class, ()->userService.addTransfer(transferDto1));
-		assertEquals(100.5, loggedUser.getAccountBalance());
-		assertEquals(210.0, friend.getAccountBalance());
-	}
-
-
-	@Test
 	void addMoney_Ok_Test() throws Exception {
 
 		// GIVEN
