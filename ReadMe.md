@@ -47,7 +47,7 @@ The following guides illustrate how to use some features concretely:
 ## - **Running App** 
 
 Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database. </br>
-For this, please run the sql commands present in the *DatabaseCreation.sql* and *Data.sql* files under the *resources* folder in the code base.
+For this, please run the sql commands present in the *DatabaseCreation.sql*, *Data.sql* and *DatabaseTestCreation.sql* files under the *resources* folder in the code base.
 
 Import the code on your computer.
 
